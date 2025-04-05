@@ -8,8 +8,9 @@ import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useState } from "react";
 import TaskCardModal from "./TaskCardModal";
+import taskData2 from "../../mock_data.json";
 
-export default function TaskCardPreview({ taskData }) {
+export default function TaskCardPreview() {
   const [open, setOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(-1);
   const handleCardClick = (taskId) => {
@@ -22,7 +23,7 @@ export default function TaskCardPreview({ taskData }) {
   };
   return (
     <>
-      {taskData.task_card_preview_mock.map((taskItem) => {
+      {taskData2.tasks.map((taskItem) => (
         <>
           <Card sx={{ maxWidth: 345 }}>
             <CardActionArea
@@ -44,13 +45,13 @@ export default function TaskCardPreview({ taskData }) {
               </CardContent>
             </CardActionArea>
           </Card>
-          <TaskCardModal
+          {/* <TaskCardModal
             taskId={selectedCard}
             open={open}
             onClose={handleDialogClose}
-          />
-        </>;
-      })}
+          /> */}
+        </>
+      ))}
     </>
   );
 }

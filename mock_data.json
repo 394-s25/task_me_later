@@ -1,5 +1,5 @@
 {
-  "task_card_preview_mock": [
+  "tasks": [
     {
       "task_title": "task_1",
       "parent_project": "proj_1",
