@@ -16,26 +16,18 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FullScreenDialog() {
-  const [open, setOpen] = React.useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+export default function TaskCardModal({taskId,open,onClose}) { 
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  if (taskId == -1) return null
+
 
   return (
     <React.Fragment>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        Open full-screen dialog
-      </Button>
       <Dialog
         fullScreen
         open={open}
-        onClose={handleClose}
+        onClose={onClose}
         TransitionComponent={Transition}
       >
         <AppBar sx={{ position: 'relative' }}>
@@ -43,7 +35,7 @@ export default function FullScreenDialog() {
             <IconButton
               edge="start"
               color="inherit"
-              onClick={handleClose}
+              onClick={onClose}
               aria-label="close"
             >
               <CloseIcon />
@@ -51,7 +43,7 @@ export default function FullScreenDialog() {
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               Sound
             </Typography>
-            <Button autoFocus color="inherit" onClick={handleClose}>
+            <Button autoFocus color="inherit" onClick={onClose}>
               save
             </Button>
           </Toolbar>

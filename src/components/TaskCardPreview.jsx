@@ -6,12 +6,24 @@ import CardActionArea from "@mui/material/CardActionArea";
 import { Button } from "@mui/material";
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
-
+import { useState } from "react";
+import TaskCardModal from "./TaskCardModal";
 
 export default function TaskCardPreview() {
+  const [open,setOpen] = useState(false)
+  const [selectedCard, setSelectedCard] = useState(-1)
+  const handleCardClick = (taskId) => {
+    setOpen(true)
+    setSelectedCard(taskId)
+  }
+  const handleDialogClose = ()=> {
+    setOpen(false)
+    setSelectedCard(-1)
+  }
   return (
+    <>
     <Card sx={{ maxWidth: 345 }}>
-      <CardActionArea onClick={() => {console.log("Card clicked")}}>
+      <CardActionArea onClick={() => {handleCardClick}}>
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
             task_title
@@ -35,5 +47,7 @@ export default function TaskCardPreview() {
         </CardContent>
       </CardActionArea>
     </Card>
+    < TaskCardModal taskId ={selectedCard} open={open} onClose={handleDialogClose} />
+    </ >
   );
 }
