@@ -25,12 +25,14 @@ export default function TaskCardPreview() {
     <>
       {taskData2.tasks.map((taskItem) => (
         <>
-          <Card sx={{ maxWidth: 345 }}>
-            <CardActionArea
-              onClick={(e) => {
-                handleCardClick(e.target.value);
-              }}
-            >
+          <Card
+            sx={{ maxWidth: 345 }}
+            onClick={() => {
+              handleCardClick(taskItem);
+              console.log(taskItem);
+            }}
+          >
+            <CardActionArea>
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
                   {taskItem.task_title}

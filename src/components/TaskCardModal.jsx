@@ -18,7 +18,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export default function TaskCardModal({ task, open, onClose }) {
-  // if (!task) return null;
+  if (!task) return null;
   return (
     <>
       <Dialog
@@ -44,18 +44,13 @@ export default function TaskCardModal({ task, open, onClose }) {
             ></Typography>
           </Toolbar>
         </AppBar>
-        <List>
-          <ListItemButton>
-            <ListItemText primary="Phone ringtone" secondary="Titania" />
-          </ListItemButton>
-          <Divider />
-          <ListItemButton>
-            <ListItemText
-              primary="Default notification ringtone"
-              secondary="Tethys"
-            />
-          </ListItemButton>
-        </List>
+        <h1 class="text-[100px]">{task.task_title}</h1>
+        <h2>{task.parent_project}</h2>
+        <h2>{task.due_date}</h2>
+        <h2>{task.project_dependencies}</h2>
+        <h2>{task.task_score}</h2>
+        <h2>{task.task_match}</h2>
+        <h2>{task.task_id}</h2>
       </Dialog>
     </>
   );
