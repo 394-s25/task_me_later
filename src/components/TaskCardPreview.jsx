@@ -13,9 +13,9 @@ import taskData2 from "../../mock_data.json";
 export default function TaskCardPreview() {
   const [open, setOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(-1);
-  const handleCardClick = (taskId) => {
+  const handleCardClick = (task) => {
     setOpen(true);
-    setSelectedCard(taskId);
+    setSelectedCard(task);
   };
   const handleDialogClose = () => {
     setOpen(false);
@@ -27,15 +27,15 @@ export default function TaskCardPreview() {
         <>
           <Card sx={{ maxWidth: 345 }}>
             <CardActionArea
-              onClick={() => {
-                handleCardClick;
+              onClick={(e) => {
+                handleCardClick(e.target.value);
               }}
             >
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
                   {taskItem.task_title}
                 </Typography>
-                <Typography>due_date</Typography>
+                <Typography>{taskItem.due_date}</Typography>
                 <Typography variant="body1">task_dependency_list</Typography>
                 <Typography variant="body2" sx={{ color: "text.secondary" }}>
                   {taskItem.task_score}
@@ -45,11 +45,11 @@ export default function TaskCardPreview() {
               </CardContent>
             </CardActionArea>
           </Card>
-          {/* <TaskCardModal
-            taskId={selectedCard}
+          <TaskCardModal
+            task={selectedCard}
             open={open}
             onClose={handleDialogClose}
-          /> */}
+          />
         </>
       ))}
     </>
