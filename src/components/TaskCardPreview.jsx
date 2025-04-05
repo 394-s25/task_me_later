@@ -1,27 +1,33 @@
 import * as React from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import CardActionArea from "@mui/material/CardActionArea";
+import { Button } from "@mui/material";
 
-export default function ActionAreaCard() {
+export default function TaskCardPreview() {
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardActionArea>
-        <CardMedia
-          component="img"
-          height="140"
-          image="/static/images/cards/contemplative-reptile.jpg"
-          alt="green iguana"
-        />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
-            Lizard
+            task_title
+          </Typography>
+          <Typography>
+            due_date
+          </Typography>
+          <Typography variant="body1">
+            task_dependency_list
           </Typography>
           <Typography variant="body2" sx={{ color: "text.secondary" }}>
-            Lizards are a widespread group of squamate reptiles, with over 6,000
-            species, ranging across all continents except Antarctica
+            task_score
+            <br />
+            task_match
+          </Typography>
+          <Typography>
+            <Button href="/add_task">
+              Add Task
+            </Button>
           </Typography>
         </CardContent>
       </CardActionArea>
