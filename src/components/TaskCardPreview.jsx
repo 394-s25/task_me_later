@@ -9,6 +9,10 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { useState } from "react";
 import TaskCardModal from "./TaskCardModal";
 import taskData2 from "../../mock_data.json";
+import CloseIcon from "@mui/icons-material/Close";
+import tml_logo from "../imgs/tml_logo.png";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
 
 export default function TaskCardPreview() {
   const [open, setOpen] = useState(false);
@@ -23,37 +27,55 @@ export default function TaskCardPreview() {
   };
   return (
     <>
-      {taskData2.tasks.map((taskItem) => (
-        <>
-          <Card
-            sx={{ maxWidth: 345 }}
-            onClick={() => {
-              handleCardClick(taskItem);
-              console.log(taskItem);
-            }}
-          >
-            <CardActionArea>
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  {taskItem.task_title}
-                </Typography>
-                <Typography>{taskItem.due_date}</Typography>
-                <Typography variant="body1">task_dependency_list</Typography>
-                <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                  {taskItem.task_score}
-                  <br />
-                  {taskItem.task_match}
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
-          <TaskCardModal
-            task={selectedCard}
-            open={open}
-            onClose={handleDialogClose}
-          />
-        </>
-      ))}
+      <img className="p-3 mx-auto items-center" src={tml_logo}></img>
+      <div className="bg-gray-100 rounded-[100px]">
+        <div className="flex flex-wrap justify-center items-center mx-auto bg-gray">
+          {taskData2.tasks.map((taskItem) => (
+            <>
+              <Card
+                className="w-35 m-3 border rounded-2xl"
+                onClick={() => {
+                  handleCardClick(taskItem);
+                  console.log(taskItem);
+                }}
+              >
+                <CardActionArea>
+                  <CardContent>
+                    <h1>{taskItem.task_title}</h1>
+                    <h1 className="text-[12px]">Due: {taskItem.due_date}</h1>
+                    <hr />
+                    <div>
+                      {/* <Stack direction="row" spacing={1}> */}
+                      <Chip
+                        label="primary"
+                        color="primary"
+                        size="small"
+                        className="w-100"
+                      />
+                      <Chip label="success" color="success" size="small" />
+                      {/* </Stack> */}
+                    </div>
+
+                    {/* <Typography
+                      variant="body2"
+                      sx={{ color: "text.secondary" }}
+                    >
+                      {taskItem.task_score}
+                      <br />
+                      {taskItem.task_match}
+                    </Typography> */}
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+              <TaskCardModal
+                task={selectedCard}
+                open={open}
+                onClose={handleDialogClose}
+              />
+            </>
+          ))}
+        </div>
+      </div>
     </>
   );
 }
