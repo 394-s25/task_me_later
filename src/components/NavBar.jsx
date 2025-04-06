@@ -16,9 +16,11 @@ import HomeIcon from "@mui/icons-material/Home";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import EmailIcon from "@mui/icons-material/Email";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { useNavigate } from "react-router-dom";
 
 export default function NavBar() {
   const [value, setValue] = React.useState(0);
+  const navigate = useNavigate;
 
   return (
     <Box sx={{ pb: 7 }}>
@@ -37,10 +39,9 @@ export default function NavBar() {
           <BottomNavigationAction label="Home" icon={<HomeIcon />} />
           <BottomNavigationAction label="Projects" icon={<AssignmentIcon />} />
           <BottomNavigationAction label="Messages" icon={<EmailIcon />} />
-          <BottomNavigationAction
-            label="Profile"
-            icon={<AccountCircleIcon />}
-          />
+          <BottomNavigationAction label="Profile" icon={<AccountCircleIcon />}>
+            <button>hello world</button>
+          </BottomNavigationAction>
         </BottomNavigation>
       </Paper>
     </Box>
