@@ -7,7 +7,8 @@
       "project_dependencies": ["depend_1", "depend_2"],
       "task_score": 5,
       "task_match": 50,
-      "task_id": 0
+      "task_id": 0,
+      "task_status": "In Progress"
     },
     {
       "task_title": "Host site",
@@ -16,7 +17,8 @@
       "project_dependencies": ["depend_1", "depend_2"],
       "task_score": 7,
       "task_match": 80,
-      "task_id": 1
+      "task_id": 1,
+      "task_status": "In Progress"
     },
     {
       "task_title": "CI/CD",
@@ -25,7 +27,8 @@
       "project_dependencies": ["depend_1", "depend_2"],
       "task_score": 2,
       "task_match": 30,
-      "task_id": 2
+      "task_id": 2,
+      "task_status": "To Do"
     },
     {
       "task_title": "Unit Tests",
@@ -34,7 +37,8 @@
       "project_dependencies": ["depend_1", "depend_2"],
       "task_score": 9,
       "task_match": 40,
-      "task_id": 3
+      "task_id": 3,
+      "task_status": "To Do"
     },
     {
       "task_title": "Routes",
@@ -43,7 +47,8 @@
       "project_dependencies": ["depend_1", "depend_2"],
       "task_score": 5,
       "task_match": 50,
-      "task_id": 4
+      "task_id": 4,
+      "task_status": "In Progress"
     },
     {
       "task_title": "Presentation",
@@ -52,7 +57,8 @@
       "project_dependencies": ["depend_1", "depend_2"],
       "task_score": 5,
       "task_match": 50,
-      "task_id": 4
+      "task_id": 4,
+      "task_status": "To Do"
     }
   ]
 }
