@@ -9,14 +9,10 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import EmailIcon from "@mui/icons-material/Email";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useNavigate } from "react-router-dom";
-import Profile from "../pages/Profile";
 
 export default function NavBar() {
   const [value, setValue] = React.useState(0);
   const navigate = useNavigate();
-  const goToProfile = () => {
-    navigate("/Profile");
-  };
   return (
     <Box sx={{ pb: 7 }}>
       <CssBaseline />
@@ -31,13 +27,25 @@ export default function NavBar() {
             setValue(newValue);
           }}
         >
-          <BottomNavigationAction label="Home" icon={<HomeIcon />} />
-          <BottomNavigationAction label="Projects" icon={<AssignmentIcon />} />
-          <BottomNavigationAction label="Messages" icon={<EmailIcon />} />
+          <BottomNavigationAction
+            label="Home"
+            icon={<HomeIcon />}
+            onClick={navigate("/")}
+          />
+          <BottomNavigationAction
+            label="Projects"
+            icon={<AssignmentIcon />}
+            onClick={navigate("/projects")}
+          />
+          <BottomNavigationAction
+            label="Messages"
+            icon={<EmailIcon />}
+            onClick={navigate("/messages")}
+          />
           <BottomNavigationAction
             label="Profile"
             icon={<AccountCircleIcon />}
-            onClick={goToProfile}
+            onClick={navigate("/profile")}
           />
         </BottomNavigation>
       </Paper>

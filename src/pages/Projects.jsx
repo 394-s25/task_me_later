@@ -1,12 +1,10 @@
 import NavBar from "../components/NavBar";
-
-const Profile = () => {
+const Projects = () => {
   return (
     <>
-      <h1>Profile Page</h1>
+      <h1>Projects Page</h1>
       <NavBar />
     </>
   );
 };
-
-export default Profile;
+export default Projects;

@@ -1,12 +1,11 @@
 import NavBar from "../components/NavBar";
 
-const Profile = () => {
+const Messages = () => {
   return (
     <>
-      <h1>Profile Page</h1>
+      <h1>Messages Tab</h1>
       <NavBar />
     </>
   );
 };
-
-export default Profile;
+export default Messages;

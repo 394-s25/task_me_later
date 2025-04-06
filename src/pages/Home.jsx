@@ -3,10 +3,10 @@ import NavBar from "../components/NavBar";
 
 const Home = () => {
   return (
-    <div>
+    <>
       <TaskCardPreview />
       <NavBar />
-    </div>
+    </>
   );
 };
 
