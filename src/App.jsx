@@ -1,13 +1,12 @@
-import "./App.css";
-import TaskCardPreview from "./components/TaskCardPreview";
-
+import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
+import Home from "./pages/Home";
 const App = () => {
   return (
-    <>
-      <div>
-        <TaskCardPreview />
-      </div>
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<></>}></Route>
+      </Routes>
+    </Router>
   );
 };
 
