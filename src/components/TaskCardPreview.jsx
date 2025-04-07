@@ -23,10 +23,12 @@ export default function TaskCardPreview() {
 
   return (
     <>
-      <img
-        className="p-3 mx-auto items-center min-h-[100%]"
-        src={tml_logo}
-      ></img>
+      <div style={{ bgcolor: "lightblue" }}>
+        <img
+          className="p-3 mx-auto items-center min-h-[100%]"
+          src={tml_logo}
+        ></img>
+      </div>
       <div className="bg-gray-100 rounded-2xl ">
         <div className="flex flex-wrap justify-center items-center mx-auto bg-gray">
           {taskData2.tasks.map((taskItem) => (

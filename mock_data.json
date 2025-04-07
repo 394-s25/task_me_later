@@ -2,63 +2,105 @@
   "tasks": [
     {
       "task_title": "Setup DB",
-      "parent_project": "proj_1",
+      "parent_project": "Task Me Later",
       "due_date": "4/5/25",
       "project_dependencies": ["depend_1", "depend_2"],
       "task_score": 5,
       "task_match": 50,
       "task_id": 0,
-      "task_status": "In Progress"
+      "task_status": "In Progress",
+      "task_details": "We need to connect our database to our site. There is a bunch of great documentation online and a ton of great video tutorials too.",
+      "task_notes": [
+        {
+          "user": "Ehulises",
+          "details": "I want to get better at back-end development. I'd love to help!"
+        }
+      ]
     },
     {
       "task_title": "Host site",
-      "parent_project": "proj_1",
+      "parent_project": "Task Me Later",
       "due_date": "4/6/25",
       "project_dependencies": ["depend_1", "depend_2"],
       "task_score": 7,
       "task_match": 80,
       "task_id": 1,
-      "task_status": "In Progress"
+      "task_status": "In Progress",
+      "task_details": "We need to set up web-hosting on firebase. I think that the url task-me-later.web.app is available. I guess we'll see.",
+      "task_notes": [
+        {
+          "user": "Mona",
+          "details": "I think Vercel is also a good method."
+        }
+      ]
     },
     {
       "task_title": "CI/CD",
-      "parent_project": "proj_2",
+      "parent_project": "Google",
       "due_date": "6/8/25",
       "project_dependencies": ["depend_1", "depend_2"],
       "task_score": 2,
       "task_match": 30,
       "task_id": 2,
-      "task_status": "To Do"
+      "task_status": "To Do",
+      "task_details": "We need to set up auto-deploying to the project. We should look into GitHub Actions or Jenkins for this. ",
+      "task_notes": [
+        {
+          "user": "Don",
+          "details": "Great idea!"
+        }
+      ]
     },
     {
       "task_title": "Unit Tests",
-      "parent_project": "proj_2",
+      "parent_project": "Facebook",
       "due_date": "5/6/25",
       "project_dependencies": ["depend_1", "depend_2"],
       "task_score": 9,
       "task_match": 40,
       "task_id": 3,
-      "task_status": "To Do"
+      "task_status": "To Do",
+      "task_details": "We need to look into vitest to complete this task. There's great documentation online about it.",
+      "task_notes": [
+        {
+          "user": "Bella",
+          "details": "This was a goal that I had for this class!"
+        }
+      ]
     },
     {
       "task_title": "Routes",
-      "parent_project": "proj_4",
+      "parent_project": "Pinterest",
       "due_date": "4/5/25",
       "project_dependencies": ["depend_1", "depend_2"],
       "task_score": 5,
       "task_match": 50,
       "task_id": 4,
-      "task_status": "In Progress"
+      "task_status": "In Progress",
+      "task_details": "We need to set up Routes for our project so that people are able to switch between different tabs.",
+      "task_notes": [
+        {
+          "user": "Luke",
+          "details": "I've used this before, it's a great idea."
+        }
+      ]
     },
     {
       "task_title": "Presentation",
-      "parent_project": "proj_4",
+      "parent_project": "Pinterest",
       "due_date": "4/5/25",
       "project_dependencies": ["depend_1", "depend_2"],
       "task_score": 5,
       "task_match": 50,
       "task_id": 4,
-      "task_status": "To Do"
+      "task_status": "To Do",
+      "task_details": "We have to make our slide deck for Wednesday. We may click this component for the presentation.",
+      "task_notes": [
+        {
+          "user": "Arch",
+          "details": "I think this is a good idea. I've always wanted to use Jenkins"
+        }
+      ]
     }
   ]
 }
