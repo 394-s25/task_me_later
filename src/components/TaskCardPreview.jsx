@@ -6,7 +6,7 @@ import { Button } from "@mui/material";
 import { useState } from "react";
 import TaskCardModal from "./TaskCardModal";
 import taskData2 from "../../mock_data.json";
-import tml_logo from "../imgs/tml_logo.png";
+import tml_logo_blue from "../imgs/tml_logo_blue.png";
 import Chip from "@mui/material/Chip";
 
 export default function TaskCardPreview() {
@@ -26,7 +26,7 @@ export default function TaskCardPreview() {
       <div style={{ bgcolor: "lightblue" }}>
         <img
           className="p-3 mx-auto items-center min-h-[100%]"
-          src={tml_logo}
+          src={tml_logo_blue}
         ></img>
       </div>
       <div className="bg-gray-100 rounded-2xl ">
@@ -111,14 +111,6 @@ export default function TaskCardPreview() {
                         MARK DONE
                       </Button>
                     </div>
-                    {/* <Typography
-                      variant="body2"
-                      sx={{ color: "text.secondary" }}
-                    >
-                      {taskItem.task_score}
-                      <br />
-                      {taskItem.task_match}
-                    </Typography> */}
                   </CardContent>
                 </CardActionArea>
               </Card>

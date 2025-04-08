@@ -14,6 +14,10 @@
         {
           "user": "Ehulises",
           "details": "I want to get better at back-end development. I'd love to help!"
+        },
+        {
+          "user": "Mona",
+          "details": "Yes!"
         }
       ]
     },
@@ -31,12 +35,16 @@
         {
           "user": "Mona",
           "details": "I think Vercel is also a good method."
+        },
+        {
+          "user": "Ehulises",
+          "details": "Great idea!"
         }
       ]
     },
     {
       "task_title": "CI/CD",
-      "parent_project": "Google",
+      "parent_project": "Pinterest",
       "due_date": "6/8/25",
       "project_dependencies": ["depend_1", "depend_2"],
       "task_score": 2,
@@ -48,12 +56,16 @@
         {
           "user": "Don",
           "details": "Great idea!"
+        },
+        {
+          "user": "Bella",
+          "details": "I've always wanted to learn how to do this!"
         }
       ]
     },
     {
       "task_title": "Unit Tests",
-      "parent_project": "Facebook",
+      "parent_project": "Pinterest",
       "due_date": "5/6/25",
       "project_dependencies": ["depend_1", "depend_2"],
       "task_score": 9,
@@ -65,12 +77,16 @@
         {
           "user": "Bella",
           "details": "This was a goal that I had for this class!"
+        },
+        {
+          "user": "Don",
+          "details": "Great idea!"
         }
       ]
     },
     {
       "task_title": "Routes",
-      "parent_project": "Pinterest",
+      "parent_project": "Spotify",
       "due_date": "4/5/25",
       "project_dependencies": ["depend_1", "depend_2"],
       "task_score": 5,
@@ -82,14 +98,18 @@
         {
           "user": "Luke",
           "details": "I've used this before, it's a great idea."
+        },
+        {
+          "user": "Arch",
+          "details": "Amazing!"
         }
       ]
     },
     {
       "task_title": "Presentation",
-      "parent_project": "Pinterest",
+      "parent_project": "Spotify",
       "due_date": "4/5/25",
-      "project_dependencies": ["depend_1", "depend_2"],
+      "project_dependencies": ["Routes"],
       "task_score": 5,
       "task_match": 50,
       "task_id": 4,
@@ -99,6 +119,10 @@
         {
           "user": "Arch",
           "details": "I think this is a good idea. I've always wanted to use Jenkins"
+        },
+        {
+          "user": "Luke",
+          "details": "Right on!"
         }
       ]
     }
