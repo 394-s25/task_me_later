@@ -1,15 +1,14 @@
 import React from "react";
-
+import { Chip } from "@mui/material";
+import ProjectTag from "./ProjectTag";
 const SignUpCard = ({ task, onClick, onSignUp }) => {
   return (
     <div
-      className="w-35 m-3 border rounded-2xl bg-white shadow-md cursor-pointer"
+      className="w-35 m-3 border rounded-lg bg-white shadow-md cursor-pointer"
       onClick={() => onClick(task)}
     >
       <div className="flex justify-between items-center mb-3">
-        <div className="bg-blue-500 rounded-full px-3 py-1 text-white text-sm">
-          {task.project}
-        </div>
+        <ProjectTag project={task.project} />
         <button
           className="text-gray-400 text-xl"
           onClick={(e) => {

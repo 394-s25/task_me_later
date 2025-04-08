@@ -8,6 +8,7 @@ import TaskCardModal from "./TaskCardModal";
 import taskData2 from "../../mock_data.json";
 import tml_logo_blue from "../imgs/tml_logo_blue.png";
 import Chip from "@mui/material/Chip";
+import ProjectTag from "./ProjectTag";
 
 export default function TaskCardPreview() {
   const [open, setOpen] = useState(false);
@@ -41,8 +42,11 @@ export default function TaskCardPreview() {
                 }}
               >
                 <CardActionArea>
+                  <ProjectTag project={taskItem.parent_project} />
                   <CardContent>
-                    <h1 className="font-bold">{taskItem.task_title}</h1>
+                    <h1 className="font-bold mt-[-7px]">
+                      {taskItem.task_title}
+                    </h1>
                     <h1 className="text-[12px]">Due: {taskItem.due_date}</h1>
                     <hr />
                     <div className="mt-1">
@@ -118,6 +122,7 @@ export default function TaskCardPreview() {
                 task={selectedCard}
                 open={open}
                 onClose={handleDialogClose}
+                setTask={setSelectedCard}
               />
             </>
           ))}

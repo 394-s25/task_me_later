@@ -19,7 +19,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function TaskCardModal({ task, open, onClose }) {
+export default function TaskCardModal({ task, open, onClose, setTask }) {
   if (!task) return null;
   const getRandomHexColor = () =>
     "#" +
@@ -65,7 +65,7 @@ export default function TaskCardModal({ task, open, onClose }) {
           <div class="relative border-1 rounded-lg p-5 items-center mx-auto mb-4 border-gray-200 bg-blue-400 text-white italic text-[20px]">
             <h2>Due: {task.due_date}</h2>
             <h2>Status: {task.task_status}</h2>
-            <h2>Task Score {task.task_score}/100</h2>
+            <h2>Task Score: {task.task_score}/100</h2>
             <h2>Match Percentage: {task.task_match}%</h2>
           </div>
           <hr class="mt-3" />
@@ -86,15 +86,41 @@ export default function TaskCardModal({ task, open, onClose }) {
                       backgroundColor: getRandomHexColor(),
                       color: "white",
                     }}
+                    onClick={() => {
+                      const nextTask = taskData2.tasks.find(
+                        (t) => t.task_title === proj_dep
+                      );
+                      if (nextTask) {
+                        setTask(nextTask); // update the modal to show this task
+                      } else {
+                        console.warn(
+                          "Task not found for dependency:",
+                          proj_dep
+                        );
+                      }
+                    }}
                   />
                 </div>
               ))}
             </div>
           </div>
           <hr class="mt-3" />
-
           <div>
-            <h1 class="font-bold text-[18px]">Notes</h1>
+            <h1 class="font-bold text-[19px]">Notes</h1>
+            {task.task_notes?.map((notes, index) => (
+              <div key={index}>
+                <h1 class="font-bold text-[16px]">{notes.user}</h1>
+                <li class="text-[14px]">{notes.details}</li>
+              </div>
+            ))}
+          </div>
+          <div class="flex flex-row justify-center items-center gap-4 mt-5">
+            <Button class="bg-amber-500 text-white rounded-lg text-[15px] px-1 py-0.5 w-[125px]">
+              Ask For Help
+            </Button>
+            <Button class="bg-green-400 text-white rounded-lg text-[15px] px-1 py-0.5 w-[175px]">
+              Mark As Complete
+            </Button>
           </div>
         </div>
       </Dialog>
