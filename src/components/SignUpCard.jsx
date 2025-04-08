@@ -3,7 +3,7 @@ import React from "react";
 const SignUpCard = ({ task, onClick, onSignUp }) => {
   return (
     <div
-      className="w-35 m-3 border rounded-2xl bg-white shadow-md cursor-pointer"
+      className="bg-white rounded-lg shadow-md p-4 cursor-pointer"
       onClick={() => onClick(task)}
     >
       <div className="flex justify-between items-center mb-3">
