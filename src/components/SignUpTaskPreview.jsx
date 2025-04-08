@@ -4,7 +4,7 @@ import SignUpCard from "./SignUpCard";
 const sampleTasks = [
   {
     id: 1,
-    project: "Story Board Project",
+    project: "Task Me Later",
     title: "Finalise Design with Team",
     dueDate: "04/02/2025",
     details: "This is the description for the task.",
@@ -13,7 +13,7 @@ const sampleTasks = [
   },
   {
     id: 2,
-    project: "CS 3XX Project",
+    project: "Spotify",
     title: "Create Demo",
     dueDate: "04/07/2025",
     details: "This is the description for the task.",
