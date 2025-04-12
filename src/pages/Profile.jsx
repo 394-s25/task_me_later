@@ -1,9 +1,12 @@
 import NavBar from "../components/NavBar";
+import ProfileDetails from "../components/ProfileDetails";
+import TaskMeLaterBlueLogo from "../components/TaskMeLaterBlueLogo";
 
 const Profile = () => {
   return (
     <>
-      <h1>Profile Page</h1>
+      <TaskMeLaterBlueLogo />
+      <ProfileDetails />
       <NavBar />
     </>
   );

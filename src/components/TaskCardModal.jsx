@@ -34,7 +34,7 @@ export default function TaskCardModal({ task, open, onClose, setTask }) {
         open={open}
         onClose={onClose}
         TransitionComponent={Transition}
-        sx={{ backgroundColor: "#77A1F3" }}
+        sx={{ backgroundColor: "#8db1fd" }}
       >
         <AppBar sx={{ position: "relative" }}>
           <Toolbar>
@@ -62,7 +62,7 @@ export default function TaskCardModal({ task, open, onClose, setTask }) {
           </h2>
         </div>
         <div class="w-[90%] mx-auto">
-          <div class="relative border-1 rounded-lg p-5 items-center mx-auto mb-4 border-gray-200 bg-blue-400 text-white italic text-[20px]">
+          <div class="relative border-1 rounded-lg p-5 items-center mx-auto mb-4 border-gray-200 bg-[#8db1fd] text-white italic text-[20px]">
             <h2>Due: {task.due_date}</h2>
             <h2>Status: {task.task_status}</h2>
             <h2>Task Score: {task.task_score}/100</h2>

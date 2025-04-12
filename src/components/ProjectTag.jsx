@@ -5,8 +5,8 @@ export default function ProjectTag({ project }) {
       label={project}
       sx={{
         borderRadius: "0px 16px 16px 0px", // Semi-oval
-        backgroundColor: "#1976d2",
-        color: "white",
+        backgroundColor: "#8db1fd",
+        color: "black",
         height: "auto",
         marginTop: 1.5,
         width: "70%",

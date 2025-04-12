@@ -9,7 +9,7 @@ import taskData2 from "../../mock_data.json";
 import tml_logo_blue from "../imgs/tml_logo_blue.png";
 import Chip from "@mui/material/Chip";
 import ProjectTag from "./ProjectTag";
-
+import TaskMeLaterBlueLogo from "./TaskMeLaterBlueLogo";
 export default function TaskCardPreview() {
   const [open, setOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(-1);
@@ -24,13 +24,8 @@ export default function TaskCardPreview() {
 
   return (
     <>
-      <div style={{ bgcolor: "lightblue" }}>
-        <img
-          className="p-3 mx-auto items-center min-h-[100%]"
-          src={tml_logo_blue}
-        ></img>
-      </div>
-      <div className="bg-gray-100 rounded-2xl ">
+      <TaskMeLaterBlueLogo />
+      <div className="bg-gray-100 rounded-2xl">
         <div className="flex flex-wrap justify-center items-center mx-auto bg-gray">
           {taskData2.tasks.map((taskItem) => (
             <>
