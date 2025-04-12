@@ -22,9 +22,45 @@ export default function TaskCardPreview() {
     setSelectedCard(-1);
   };
 
+  const ProgressChip = ({ taskItem }) => {
+    return (
+      <>
+        {taskItem.task_status === "Completed" ? (
+          <Chip
+            label={taskItem.task_status}
+            size="small"
+            style={{
+              backgroundColor: "lightgreen",
+              color: "black",
+            }}
+          />
+        ) : taskItem.task_status === "In Progress" ? (
+          <Chip
+            label={taskItem.task_status}
+            size="small"
+            style={{
+              backgroundColor: "orange",
+              color: "black",
+            }}
+          />
+        ) : (
+          taskItem.task_status === "To Do" && (
+            <Chip
+              label={taskItem.task_status}
+              size="small"
+              style={{
+                backgroundColor: "red",
+                color: "white",
+              }}
+            />
+          )
+        )}
+      </>
+    );
+  };
+
   return (
     <>
-      <TaskMeLaterBlueLogo />
       <div className="bg-gray-100 rounded-2xl">
         <div className="flex flex-wrap justify-center items-center mx-auto bg-gray">
           {taskData2.tasks.map((taskItem) => (
@@ -45,37 +81,7 @@ export default function TaskCardPreview() {
                     <h1 className="text-[12px]">Due: {taskItem.due_date}</h1>
                     <hr />
                     <div className="mt-1">
-                      {taskItem.task_status === "Completed" ? (
-                        <Chip
-                          label={taskItem.task_status}
-                          size="small"
-                          style={{
-                            backgroundColor: "lightgreen",
-                            color: "black",
-                          }}
-                        />
-                      ) : taskItem.task_status === "In Progress" ? (
-                        <Chip
-                          label={taskItem.task_status}
-                          size="small"
-                          style={{
-                            backgroundColor: "orange",
-                            color: "black",
-                          }}
-                        />
-                      ) : (
-                        taskItem.task_status === "To Do" && (
-                          <Chip
-                            label={taskItem.task_status}
-                            size="small"
-                            style={{
-                              backgroundColor: "red",
-                              color: "white",
-                            }}
-                          />
-                        )
-                      )}
-
+                      <ProgressChip taskItem={taskItem} />
                       {/* <Chip label="success" color="success" size="small" /> */}
                       {/* </Stack> */}
                     </div>

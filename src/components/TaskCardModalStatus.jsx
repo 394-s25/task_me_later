@@ -32,7 +32,7 @@ export default function TaskCardModalStatus() {
         >
           <MenuItem value={10}>To Do</MenuItem>
           <MenuItem value={20}>In Progress</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
+          <MenuItem value={30}>Completed</MenuItem>
         </Select>
       </FormControl>
     </Box>
