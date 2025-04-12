@@ -1,3 +1,7 @@
+import GoogleAuth from "../components/GoogleAuth";
+
 const Login = () => {
-  return <GoogleAuth user={user} onUserChange={handleUserChange} />;
+  return <GoogleAuth />;
 };
+
+export default Login;

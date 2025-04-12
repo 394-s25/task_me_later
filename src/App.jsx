@@ -4,14 +4,12 @@ import Profile from "./pages/Profile";
 import Messages from "./pages/Messages";
 import Projects from "./pages/Projects";
 import Login from "./pages/Login";
+import { useAuthContext } from "./services/userProvider";
+import { Navigate } from "react-router-dom";
 
 const App = () => {
   const PrivateRoute = ({ children }) => {
     const { user, authLoading } = useAuthContext();
-
-    if (authLoading) {
-      return <LoadingScreen text={"Loading..."} />;
-    }
 
     if (!user) {
       return <Navigate to="/login" replace />;
