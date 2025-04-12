@@ -1,8 +1,19 @@
-import React from "react";
+import { React, createContext, useContext } from "react";
 import { Button } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useGoogleLogin, googleLogout } from "@react-oauth/google";
+
+/** @type {AuthContextType} */
+const AuthContext = createContext();
+
+/**
+ *
+ * @returns {AuthContextType}
+ */
+export function useAuthContext() {
+  return useContext(AuthContext);
+}
 
 const GoogleAuth = ({ user, onUserChange }) => {
   const login = useGoogleLogin({
