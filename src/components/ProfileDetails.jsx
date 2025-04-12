@@ -1,6 +1,12 @@
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Card } from "@mui/material";
+import GoogleAuth from "./GoogleAuth";
+import React from "react";
+import { useAuthContext } from "../services/userProvider";
+
 export default function ProfileDetails() {
+  const { user } = useAuthContext();
+
   const Title = ({ title }) => {
     return <h3 class="text-[17px] font-bold">{title}</h3>;
   };
@@ -14,8 +20,11 @@ export default function ProfileDetails() {
           <div class="max-w-[30%] flex flex-col items-center m-2">
             <AccountCircleIcon class="size-20" />
             <div class="text-center">
-              <h1>Spencer Arch Silverstein</h1>
-              <h1 class="text-[12px]">user_name03</h1>
+              <h1>{user ? user.displayName : "dummy name"}</h1>
+              <h2 class="break-words w-[50%] ml-[25%]">
+                {user ? user.email : "dummy@gmail.com"}
+              </h2>
+              <GoogleAuth />
             </div>
           </div>
           <div class="w-[60%] mx-auto m-4">
@@ -31,7 +40,6 @@ export default function ProfileDetails() {
           </div>
         </div>
       </Card>
-      {/* <hr class="w-[90%] mx-auto justify-center" /> */}
     </>
   );
 }
