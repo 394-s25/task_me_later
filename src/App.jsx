@@ -11,6 +11,10 @@ const App = () => {
   const PrivateRoute = ({ children }) => {
     const { user, authLoading } = useAuthContext();
 
+    if (authLoading) {
+      return "Loading...";
+    }
+    console.log(`From PrivateRoute: user is ${user.displayName}`);
     if (!user) {
       return <Navigate to="/login" replace />;
     }

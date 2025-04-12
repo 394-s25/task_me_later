@@ -1,13 +1,11 @@
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Card } from "@mui/material";
 import GoogleAuth from "./GoogleAuth";
-import React, { useState } from "react";
+import React from "react";
+import { useAuthContext } from "../services/userProvider";
 
 export default function ProfileDetails() {
-  const [user, setUser] = useState(null);
-  const handleUserChange = (userData) => {
-    setUser(userData);
-  };
+  const { user } = useAuthContext();
 
   const Title = ({ title }) => {
     return <h3 class="text-[17px] font-bold">{title}</h3>;
@@ -22,10 +20,9 @@ export default function ProfileDetails() {
           <div class="max-w-[30%] flex flex-col items-center m-2">
             <AccountCircleIcon class="size-20" />
             <div class="text-center">
-              <h1>{user ? user.name : "Spencer Arch Silverstein"}</h1>
-              <h1 class="text-[12px]">user_name03</h1>
-
-              <GoogleAuth user={user} onUserChange={handleUserChange} />
+              <h1>{user ? user.displayName : "dummy name"}</h1>
+              <h2>{user ? user.email : "dummy@gmail.com"}</h2>
+              <GoogleAuth />
             </div>
           </div>
           <div class="w-[60%] mx-auto m-4">
