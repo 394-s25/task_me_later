@@ -14,7 +14,7 @@ const App = () => {
     if (authLoading) {
       return "Loading...";
     }
-    console.log(`From PrivateRoute: user is ${user.displayName}`);
+    // console.log(`From PrivateRoute: user is ${user.displayName}`);
     if (!user) {
       return <Navigate to="/login" replace />;
     }

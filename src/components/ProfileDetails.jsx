@@ -21,7 +21,9 @@ export default function ProfileDetails() {
             <AccountCircleIcon class="size-20" />
             <div class="text-center">
               <h1>{user ? user.displayName : "dummy name"}</h1>
-              <h2>{user ? user.email : "dummy@gmail.com"}</h2>
+              <h2 class="break-words w-[50%] ml-[25%]">
+                {user ? user.email : "dummy@gmail.com"}
+              </h2>
               <GoogleAuth />
             </div>
           </div>
@@ -38,7 +40,6 @@ export default function ProfileDetails() {
           </div>
         </div>
       </Card>
-      {/* <hr class="w-[90%] mx-auto justify-center" /> */}
     </>
   );
 }
