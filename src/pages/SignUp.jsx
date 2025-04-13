@@ -8,6 +8,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
 import { SkillsForSignUpPage } from "../components/SkillsForSignUpPage";
+
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -42,6 +43,21 @@ function getStyles(name, personName, theme) {
 
 export default function SignUp() {
   const handleSubmit = () => {
+    fetch("localhost:3001:/api/users", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        aboutMe: aboutMe,
+        phoneNumber: phoneNumber,
+        skills: skills,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => console.log("Response:", data))
+      .catch((err) => console.error("Error:", err));
+
     console.log(aboutMe, phoneNumber, skills);
   };
   const [aboutMe, setAboutMe] = useState("");

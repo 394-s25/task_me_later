@@ -6,6 +6,7 @@ import {
   GoogleAuthProvider,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
 
 const GoogleAuth = () => {
   const navigate = useNavigate();
@@ -31,7 +32,11 @@ const GoogleAuth = () => {
     },
     onError: (err) => console.error("Login Failed:", err),
   });
-  return <button onClick={() => login()}>Sign in with Google</button>;
+  return (
+    <Button variant="contained" onClick={() => login()}>
+      Sign in with Google
+    </Button>
+  );
 };
 
 export default GoogleAuth;

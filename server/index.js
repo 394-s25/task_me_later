@@ -2,6 +2,7 @@
 const express = require("express");
 const cors = require("cors");
 const { db } = require("./firebase");
+const { addUser } = require("./dbtools");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -21,7 +22,8 @@ app.post("/api/users", async (req, res) => {
       return res.status(400).json({ error: "Missing required fields: uid" });
     }
 
-    await db.collection("users").doc(userData.uid).set(userData);
+    await addUser(userData);
+
     res.status(201).json({ message: "User added successfully" });
   } catch (error) {
     console.error("Error adding user:", error);
