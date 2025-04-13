@@ -7,6 +7,7 @@ import {
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
+import GoogleIcon from "@mui/icons-material/Google";
 
 const GoogleAuth = () => {
   const navigate = useNavigate();
@@ -33,8 +34,8 @@ const GoogleAuth = () => {
     onError: (err) => console.error("Login Failed:", err),
   });
   return (
-    <Button variant="contained" onClick={() => login()}>
-      Sign in with Google
+    <Button startIcon={<GoogleIcon />} onClick={() => login()} fullWidth>
+      Sign In with Google
     </Button>
   );
 };

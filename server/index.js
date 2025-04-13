@@ -14,6 +14,24 @@ app.get("/api/hello", (req, res) => {
   res.json({ message: "Hello from Express backend!" });
 });
 
+app.get("/api/users/:uid", async (req, res) => {
+  const { uid } = req.params;
+
+  try {
+    const userRef = db.collection("users").doc(uid);
+    const userDoc = await userRef.get();
+
+    if (userDoc.exists) {
+      res.status(200).json(userDoc.data());
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (err) {
+    console.error("Error checking user:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 app.post("/api/users", async (req, res) => {
   try {
     const userData = req.body;
