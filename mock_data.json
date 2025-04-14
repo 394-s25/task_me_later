@@ -126,5 +126,216 @@
         }
       ]
     }
+  ],
+  "projects": [
+    {
+      "project_id": 1,
+      "project_name": "Story Board Project",
+      "details": "This is the description for the project. It outlines the main objectives and goals that need to be accomplished.",
+      "due_date": "04/02/2025",
+      "tasks_completed": 1,
+      "tasks_total": 5,
+      "team_contributions": [
+        { "name": "Alex", "contribution": 80 },
+        { "name": "Taylor", "contribution": 20 },
+        { "name": "Jordan", "contribution": 0 },
+        { "name": "Casey", "contribution": 0 }
+      ],
+      "my_tasks": [
+        {
+          "name": "Finalise Page Selection With Team",
+          "status": "Completed",
+          "id": 101
+        },
+        { "name": "Finalise Page Design", "status": "In Progress", "id": 102 }
+      ],
+      "team_tasks": [
+        {
+          "name": "Taylor",
+          "tasks": [
+            { "name": "Make Presentation", "status": "Completed", "id": 103 },
+            {
+              "name": "Finalise Design With Team",
+              "status": "In Progress",
+              "id": 104
+            }
+          ]
+        }
+      ],
+      "available_tasks": [
+        {
+          "task_title": "Finalise Design With Team",
+          "due_date": "04/02/2025",
+          "task_details": "This is the description for the task.",
+          "task_score": 85,
+          "task_match": 80,
+          "priority": "High Priority"
+        }
+      ],
+      "notes": [
+        {
+          "user": "Me",
+          "notes": ["This is where my notes would go", "(if there are any)"]
+        },
+        {
+          "user": "Taylor",
+          "notes": [
+            "This is where team member 1's notes would go",
+            "(if there are any)"
+          ]
+        }
+      ]
+    },
+    {
+      "project_id": 2,
+      "project_name": "CYC Client Project",
+      "details": "This is the description for the project. It outlines client requirements and key deliverables.",
+      "due_date": "06/02/2025",
+      "tasks_completed": 1,
+      "tasks_total": 4,
+      "team_contributions": [
+        { "name": "Alex", "contribution": 60 },
+        { "name": "Morgan", "contribution": 40 },
+        { "name": "Riley", "contribution": 0 },
+        { "name": "Jamie", "contribution": 0 }
+      ],
+      "my_tasks": [
+        { "name": "Client Meeting Notes", "status": "Completed", "id": 201 },
+        { "name": "Wireframe Homepage", "status": "In Progress", "id": 202 }
+      ],
+      "team_tasks": [
+        {
+          "name": "Morgan",
+          "tasks": [
+            { "name": "Design Logo Options", "status": "Completed", "id": 203 },
+            {
+              "name": "Create Color Palette",
+              "status": "In Progress",
+              "id": 204
+            }
+          ]
+        }
+      ],
+      "available_tasks": [
+        {
+          "task_title": "Set Up Analytics",
+          "due_date": "05/25/2025",
+          "task_details": "Implement Google Analytics for the client website.",
+          "task_score": 70,
+          "task_match": 65,
+          "priority": "Medium Priority"
+        }
+      ],
+      "notes": [
+        {
+          "user": "Me",
+          "notes": [
+            "Client prefers blue color scheme",
+            "Need to schedule follow-up meeting"
+          ]
+        },
+        {
+          "user": "Morgan",
+          "notes": [
+            "Found great reference designs",
+            "Client wants minimalist approach"
+          ]
+        }
+      ]
+    },
+    {
+      "project_id": 3,
+      "project_name": "CS 3XX Project",
+      "details": "This is the description for the project. Final project for the course that demonstrates applying concepts learned.",
+      "due_date": "05/01/2025",
+      "tasks_completed": 0,
+      "tasks_total": 5,
+      "team_contributions": [
+        { "name": "Alex", "contribution": 25 },
+        { "name": "Drew", "contribution": 25 },
+        { "name": "Parker", "contribution": 25 },
+        { "name": "Quinn", "contribution": 25 }
+      ],
+      "my_tasks": [
+        { "name": "Set Up Repository", "status": "To Do", "id": 301 },
+        { "name": "Create Project Plan", "status": "To Do", "id": 302 }
+      ],
+      "team_tasks": [
+        {
+          "name": "Drew",
+          "tasks": [
+            { "name": "Research API Options", "status": "To Do", "id": 303 },
+            { "name": "Set Up Authentication", "status": "To Do", "id": 304 }
+          ]
+        }
+      ],
+      "available_tasks": [
+        {
+          "task_title": "Write Unit Tests",
+          "due_date": "04/25/2025",
+          "task_details": "Create comprehensive test suite for core functionality.",
+          "task_score": 90,
+          "task_match": 75,
+          "priority": "High Priority"
+        }
+      ],
+      "notes": [
+        {
+          "user": "Me",
+          "notes": [
+            "Need to review class materials on authentication",
+            "Ask professor about API requirements"
+          ]
+        },
+        {
+          "user": "Drew",
+          "notes": ["Found helpful tutorial for the API integration"]
+        }
+      ]
+    },
+    {
+      "project_id": 4,
+      "project_name": "Random Past Project",
+      "details": "This is the description for the project. An archived project that has been completed.",
+      "due_date": "01/15/2025",
+      "tasks_completed": 5,
+      "tasks_total": 5,
+      "team_contributions": [
+        { "name": "Alex", "contribution": 70 },
+        { "name": "Sam", "contribution": 30 },
+        { "name": "N/A", "contribution": 0 },
+        { "name": "N/A", "contribution": 0 }
+      ],
+      "my_tasks": [
+        { "name": "Final Report", "status": "Completed", "id": 401 },
+        { "name": "Data Analysis", "status": "Completed", "id": 402 }
+      ],
+      "team_tasks": [
+        {
+          "name": "Sam",
+          "tasks": [
+            { "name": "Create Presentation", "status": "Completed", "id": 403 },
+            { "name": "Research Background", "status": "Completed", "id": 404 }
+          ]
+        }
+      ],
+      "available_tasks": [],
+      "notes": [
+        {
+          "user": "Me",
+          "notes": [
+            "Project completed on time and received positive feedback",
+            "Could use as reference for future projects"
+          ]
+        },
+        {
+          "user": "Sam",
+          "notes": [
+            "The presentation went smoothly",
+            "Audience had good questions"
+          ]
+        }
+      ]
+    }
   ]
 }
