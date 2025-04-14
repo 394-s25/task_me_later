@@ -6,6 +6,7 @@ import Projects from "./pages/Projects";
 import Login from "./pages/Login";
 import { useAuthContext } from "./services/userProvider";
 import { Navigate } from "react-router-dom";
+import SignUp from "./pages/SignUp";
 
 const App = () => {
   const PrivateRoute = ({ children }) => {
@@ -54,6 +55,14 @@ const App = () => {
           element={
             <PrivateRoute>
               <Profile />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <PrivateRoute>
+              <SignUp />
             </PrivateRoute>
           }
         />
