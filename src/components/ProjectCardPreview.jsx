@@ -6,7 +6,8 @@ import { Button } from "@mui/material";
 import { useState } from "react";
 import Chip from "@mui/material/Chip";
 import ProjectCardModal from "./ProjectCardModal";
-import projectData from "../../mock_data.json"; // Assuming you'll update your mock data to include projects
+import projectData from "../../mock_data.json";
+import tml_logo_blue from "../imgs/tml_logo_blue.png";
 
 export default function ProjectCardPreview() {
   const [open, setOpen] = useState(false);
@@ -62,63 +63,118 @@ export default function ProjectCardPreview() {
     return (tasksCompleted / tasksTotal) * 100;
   };
 
+  // Function to determine if a project is completed
+  const isProjectCompleted = (project) => {
+    const tasksCompleted = project.tasks_completed || 0;
+    const tasksTotal = project.tasks_total || 0;
+    return tasksCompleted === tasksTotal && tasksTotal > 0;
+  };
+
+  // Filter projects into current and past
+  const currentProjects = projectData.projects
+    ? projectData.projects.filter((project) => !isProjectCompleted(project))
+    : [];
+
+  const pastProjects = projectData.projects
+    ? projectData.projects.filter((project) => isProjectCompleted(project))
+    : [];
+
+  // Project card component to avoid duplicating code
+  const ProjectCard = ({ projectItem }) => (
+    <Card
+      className="w-35 m-3 border rounded-2xl"
+      onClick={() => {
+        handleCardClick(projectItem);
+        console.log(projectItem);
+      }}
+    >
+      <CardActionArea>
+        <CardContent>
+          <h1 className="font-bold mt-[-7px]">{projectItem.project_name}</h1>
+          <h1 className="text-[12px]">Due: {projectItem.due_date}</h1>
+          <hr />
+          <div className="mt-1">
+            <ProgressChip project={projectItem} />
+          </div>
+          <hr className="mt-1" />
+          <p className="text-xs mt-1">
+            Tasks: {projectItem.tasks_completed} / {projectItem.tasks_total}
+          </p>
+          <div className="mt-2 w-full bg-gray-200 rounded-full h-1">
+            <div
+              className="bg-blue-600 h-1 rounded-full"
+              style={{
+                width: `${calculateProgress(projectItem)}%`,
+              }}
+            ></div>
+          </div>
+        </CardContent>
+      </CardActionArea>
+    </Card>
+  );
+
   return (
     <>
-      <div className="bg-gray-100 rounded-2xl">
-        <div className="flex flex-wrap justify-center items-center mx-auto bg-gray">
-          {projectData.projects &&
-            projectData.projects.map((projectItem) => (
-              <React.Fragment key={projectItem.id || projectItem.project_name}>
-                <Card
-                  className="w-64 m-3 border rounded-2xl"
-                  onClick={() => {
-                    handleCardClick(projectItem);
-                    console.log(projectItem);
-                  }}
-                >
-                  <CardActionArea>
-                    <CardContent>
-                      <h1 className="font-bold">{projectItem.project_name}</h1>
-                      <p className="text-xs mt-1">
-                        Details:{" "}
-                        {projectItem.details ||
-                          "This is the description for the project."}
-                      </p>
-                      <p className="text-xs mt-2">
-                        Tasks: {projectItem.tasks_completed || 0} Completed,{" "}
-                        {projectItem.tasks_total -
-                          projectItem.tasks_completed || 0}{" "}
-                        Remaining
-                      </p>
-                      <div className="mt-2">
-                        <ProgressChip project={projectItem} />
-                      </div>
-                      <p className="text-xs mt-2">
-                        Due: {projectItem.due_date}
-                      </p>
-                      <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
-                        <div
-                          className="bg-blue-600 h-2 rounded-full"
-                          style={{
-                            width: `${calculateProgress(projectItem)}%`,
-                          }}
-                        ></div>
-                      </div>
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
-              </React.Fragment>
-            ))}
+      <div className="bg-gray-100 rounded-2xl p-4 w-full max-w-4xl mx-auto">
+        {/* Current Projects Section */}
+        <h2
+          className="text-2xl font-bold mb-4 ml-4"
+          style={{ color: "#77A1F3" }}
+        >
+          Your Current Projects
+        </h2>
+        <div className="grid grid-cols-2 gap-4 mx-auto">
+          {currentProjects.length > 0 ? (
+            currentProjects.map((projectItem, index) => (
+              <div
+                key={`current-${projectItem.project_id || index}`}
+                className={
+                  index % 2 === 0 ? "justify-self-end" : "justify-self-start"
+                }
+              >
+                <ProjectCard projectItem={projectItem} />
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-500 italic text-center col-span-2">
+              No current projects
+            </p>
+          )}
+        </div>
+
+        {/* Past Projects Section */}
+        <h2
+          className="text-2xl font-bold mt-8 mb-4 ml-4"
+          style={{ color: "#77A1F3" }}
+        >
+          Your Past Projects
+        </h2>
+        <div className="grid grid-cols-2 gap-4 mx-auto">
+          {pastProjects.length > 0 ? (
+            pastProjects.map((projectItem, index) => (
+              <div
+                key={`past-${projectItem.project_id || index}`}
+                className={
+                  index % 2 === 0 ? "justify-self-end" : "justify-self-start"
+                }
+              >
+                <ProjectCard projectItem={projectItem} />
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-500 italic text-center col-span-2">
+              No past projects
+            </p>
+          )}
         </div>
       </div>
-      {selectedProject !== -1 && (
-        <ProjectCardModal
-          project={selectedProject}
-          open={open}
-          onClose={handleDialogClose}
-          setProject={setSelectedProject}
-        />
-      )}
+
+      <ProjectCardModal
+        project={selectedProject}
+        open={open}
+        onClose={handleDialogClose}
+        setProject={setSelectedProject}
+      />
     </>
   );
 }

@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import Divider from "@mui/material/Divider";
@@ -10,6 +11,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
 import { Chip } from "@mui/material";
 import tml_logo_white from "../imgs/tml_logo_white.png";
+import ProjectSignUpCard from "./ProjectSignUpCard";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -22,6 +24,34 @@ export default function ProjectCardModal({
   setProject,
 }) {
   if (!project) return null;
+
+  const [availableTasks, setAvailableTasks] = useState([]);
+  const [signedUpTasks, setSignedUpTasks] = useState([]);
+
+  // Use an effect to update availableTasks when project changes
+  useEffect(() => {
+    if (project && project.available_tasks) {
+      setAvailableTasks([...project.available_tasks]);
+    } else {
+      setAvailableTasks([]);
+    }
+  }, [project]);
+
+  const handleTaskClick = (task) => {
+    console.log("Task clicked:", task);
+  };
+
+  const handleSignUp = (task) => {
+    // Add the task to signedUpTasks
+    setSignedUpTasks([...signedUpTasks, task]);
+    
+    // Remove the task from availableTasks by filtering out the task with the same task_title
+    setAvailableTasks(availableTasks.filter(
+      (t) => t.task_title !== task.task_title
+    ));
+    
+    console.log(`Signed up for task: ${task.task_title}`);
+  };
 
   // Calculate progress percentage
   const calculateProgress = () => {
@@ -48,7 +78,7 @@ export default function ProjectCardModal({
         onClose={onClose}
         TransitionComponent={Transition}
       >
-        <AppBar sx={{ position: "relative", backgroundColor: "#4a7bfe" }}>
+        <AppBar sx={{ position: "relative", backgroundColor: "#77A1F3" }}>
           <Toolbar>
             <IconButton
               edge="start"
@@ -176,60 +206,42 @@ export default function ProjectCardModal({
 
           {/* Sign Up For Tasks */}
           <h1 className="font-bold text-xl mt-3">Sign Up For Tasks</h1>
-          {project.available_tasks && project.available_tasks.length > 0 ? (
-            project.available_tasks.map((task, index) => (
-              <div
-                key={index}
-                className="border border-gray-300 rounded-lg p-4 mt-2 relative"
-              >
-                <div className="absolute top-2 left-2 flex items-center">
-                  <div className="w-4 h-4 bg-blue-500 rounded-full mr-1"></div>
-                  <span className="text-xs font-semibold text-blue-500">
-                    {project.project_name}
-                  </span>
-                </div>
-
-                <div className="mt-6 pl-2">
-                  <h3 className="font-bold">{task.task_title}</h3>
-                  <p className="text-xs">Due: {task.due_date}</p>
-                  <p className="text-xs">Details: {task.task_details}</p>
-                  <p className="text-xs">Task Score: {task.task_score}/100</p>
-                  <p className="text-xs">Task Match: {task.task_match}%</p>
-
-                  <div className="flex justify-end mt-2">
-                    <Button
-                      variant="contained"
-                      size="small"
-                      sx={{
-                        backgroundColor: "#4caf50",
-                        fontSize: "12px",
-                        ":hover": {
-                          backgroundColor: "#388e3c",
-                        },
-                      }}
-                    >
-                      Add Task
-                    </Button>
-                  </div>
-                </div>
-                <IconButton
-                  size="small"
-                  className="absolute top-1 right-1"
-                  sx={{ padding: 0 }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    // Add handler for closing/removing this task card if needed
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+            {availableTasks && availableTasks.length > 0 ? (
+              availableTasks.map((task, index) => (
+                <ProjectSignUpCard
+                  key={index}
+                  task={{
+                    ...task,
+                    project: project.project_name,
+                    needsHelp: Math.random() > 0.5, // Random for demo purposes
                   }}
-                >
-                  <CloseIcon fontSize="small" />
-                </IconButton>
-              </div>
-            ))
-          ) : (
-            <p className="mt-2 text-gray-500 italic">
-              No tasks currently available for signup
-            </p>
-          )}
+                  onClick={handleTaskClick}
+                  onSignUp={handleSignUp}
+                />
+              ))
+            ) : (
+              <p className="mt-2 text-gray-500 italic col-span-2">
+                No tasks currently available for signup
+              </p>
+            )}
+          </div>
+
+          {/* Signed Up Tasks Section */}
+          {/* {signedUpTasks.length > 0 && (
+            <>
+              <Divider className="mt-3" />
+              <h1 className="font-bold text-xl mt-3">Your Signed Up Tasks</h1>
+              <ul className="bg-white rounded-lg shadow-md p-4 mt-2">
+                {signedUpTasks.map((task, index) => (
+                  <li key={index} className="py-2 border-b last:border-0">
+                    <span className="font-medium">{task.task_title}</span> -
+                    Due: {task.due_date}
+                  </li>
+                ))}
+              </ul>
+            </>
+          )} */}
 
           <Divider className="mt-3" />
 
