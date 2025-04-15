@@ -51,7 +51,7 @@ const GoogleAuth = () => {
             Log In With Google
           </button>
           <button
-            onClick={() => SignUpCard()}
+            onClick={() => console.log("A")}
             class="border-3 border-[#8db1fd] p-3 rounded-md flex flex-row"
           >
             <img src={GoogleImg} class="w-5 mt-0.5 mr-2"></img>
