@@ -1,0 +1,110 @@
+{
+  "projects": [
+    {
+      "proj_id": 0,
+      "project_name": "Task Me Later",
+      "details": "The Task Me Later app helps teams, classmates, and friend groups organize and share tasks in a more collaborative way.",
+      "due_date": "06/01/2025"
+    },
+    {
+      "proj_id": 1,
+      "project_name": "Spotify",
+      "details": "This is the description for the project. It outlines client requirements and key deliverables.",
+      "due_date": "06/02/2025"
+    }
+  ],
+  "tasks": [
+    {
+      "task_id": 0,
+      "proj_id": 0,
+      "contrib_id": 0,
+      "task_title": "Setup DB",
+      "parent_project": "Task Me Later",
+      "due_date": "4/5/25",
+      "project_dependencies": ["Host site"],
+      "task_score": 5,
+      "task_match": 50,
+      "task_status": "In Progress",
+      "task_details": "We need to connect our database to our site. There is a bunch of great documentation online and a ton of great video tutorials too."
+    },
+    {
+      "task_id": 1,
+      "proj_id": 0,
+      "contrib_id": 2,
+      "task_title": "Host site",
+      "parent_project": "Task Me Later",
+      "due_date": "4/6/25",
+      "project_dependencies": ["Setup DB"],
+      "task_score": 7,
+      "task_match": 80,
+      "task_status": "In Progress",
+      "task_details": "We need to set up web-hosting on firebase. I think that the url task-me-later.web.app is available. I guess we'll see."
+    },
+    {
+      "task_id": 2,
+      "proj_id": 0,
+      "contrib_id": null,
+      "task_title": "CI/CD",
+      "parent_project": "Pinterest",
+      "due_date": "6/8/25",
+      "project_dependencies": ["Unit Tests"],
+      "task_score": 2,
+      "task_match": 30,
+      "task_status": "To Do",
+      "task_details": "We need to set up auto-deploying to the project. We should look into GitHub Actions or Jenkins for this."
+    },
+    {
+      "task_id": 3,
+      "proj_id": 1,
+      "contrib_id": 1,
+      "task_title": "Unit Tests",
+      "parent_project": "Pinterest",
+      "due_date": "5/6/25",
+      "project_dependencies": ["CI/CD"],
+      "task_score": 9,
+      "task_match": 40,
+      "task_status": "To Do",
+      "task_details": "We need to look into vitest to complete this task. There's great documentation online about it."
+    },
+    {
+      "task_id": 4,
+      "proj_id": 1,
+      "contrib_id": 3,
+      "task_title": "Routes",
+      "parent_project": "Spotify",
+      "due_date": "4/5/25",
+      "project_dependencies": ["Presentation"],
+      "task_score": 10,
+      "task_match": 21,
+      "task_status": "In Progress",
+      "task_details": "We need to set up Routes for our project so that people are able to switch between different tabs."
+    },
+    {
+      "task_id": 5,
+      "proj_id": 1,
+      "contrib_id": null,
+      "task_title": "Presentation",
+      "parent_project": "Spotify",
+      "due_date": "4/5/25",
+      "project_dependencies": ["Routes"],
+      "task_score": 90,
+      "task_match": 27,
+      "task_status": "To Do",
+      "task_details": "We have to make our slide deck for Wednesday. We may click this component for the presentation."
+    }
+  ],
+  "contributors": [
+    { "contrib_id": 0, "user_id": 0, "proj_id": 0, "role_id": 0 },
+    { "contrib_id": 1, "user_id": 0, "proj_id": 1, "role_id": 1 },
+    { "contrib_id": 2, "user_id": 1, "proj_id": 0, "role_id": 1 },
+    { "contrib_id": 3, "user_id": 1, "proj_id": 1, "role_id": 0 }
+  ],
+  "users": [
+    { "user_id": 0, "username": "user1" },
+    { "user_id": 1, "username": "user2" }
+  ],
+  "roles": [
+    { "role_id": 0, "role_name": "admin" },
+    { "role_id": 1, "role_name": "member" }
+  ]
+}
