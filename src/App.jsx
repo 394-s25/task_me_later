@@ -6,7 +6,8 @@ import Projects from "./pages/Projects";
 import Login from "./pages/Login";
 import { useAuthContext } from "./services/userProvider";
 import { Navigate } from "react-router-dom";
-import SignUp from "./pages/SignUp";
+// import SignUp from "./pages/SignUp";
+import SignUp from "./pages/CreateAccount";
 
 const App = () => {
   const PrivateRoute = ({ children }) => {
@@ -15,9 +16,9 @@ const App = () => {
     if (authLoading) {
       return "Loading...";
     }
-    // console.log(`From PrivateRoute: user is ${user.displayName}`);
+
     if (!user) {
-      return <Navigate to="/login" replace />;
+      return <Navigate to="/signup" replace />;
     }
 
     return children;
@@ -58,14 +59,7 @@ const App = () => {
             </PrivateRoute>
           }
         />
-        <Route
-          path="/signup"
-          element={
-            <PrivateRoute>
-              <SignUp />
-            </PrivateRoute>
-          }
-        />
+        <Route path="/create-account" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
       </Routes>
     </Router>

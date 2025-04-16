@@ -1,6 +1,7 @@
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Card } from "@mui/material";
 import GoogleAuth from "./GoogleAuth";
+import LogoutButton from "./LogoutButton";
 import React from "react";
 import { useAuthContext } from "../services/userProvider";
 
@@ -25,6 +26,8 @@ export default function ProfileDetails() {
                 {user ? user.email : "dummy@gmail.com"}
               </h2>
               <GoogleAuth />
+              <br />
+              <LogoutButton />
             </div>
           </div>
           <div class="w-[60%] mx-auto m-4">

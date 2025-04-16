@@ -2,6 +2,7 @@
 const express = require("express");
 const cors = require("cors");
 const { db } = require("./firebase");
+const { addUser } = require("./dbtools");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -13,6 +14,24 @@ app.get("/api/hello", (req, res) => {
   res.json({ message: "Hello from Express backend!" });
 });
 
+app.get("/api/users/:uid", async (req, res) => {
+  const { uid } = req.params;
+
+  try {
+    const userRef = db.collection("users").doc(uid);
+    const userDoc = await userRef.get();
+
+    if (userDoc.exists) {
+      res.status(200).json(userDoc.data());
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (err) {
+    console.error("Error checking user:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 app.post("/api/users", async (req, res) => {
   try {
     const userData = req.body;
@@ -21,7 +40,8 @@ app.post("/api/users", async (req, res) => {
       return res.status(400).json({ error: "Missing required fields: uid" });
     }
 
-    await db.collection("users").doc(userData.uid).set(userData);
+    await addUser(userData);
+
     res.status(201).json({ message: "User added successfully" });
   } catch (error) {
     console.error("Error adding user:", error);
