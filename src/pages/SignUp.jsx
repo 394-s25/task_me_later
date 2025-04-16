@@ -79,7 +79,7 @@ const SignUpLoginPage = () => {
         gap: 2,
       }}
     >
-      <Typography variant="h5" align="center">
+      {/* <Typography variant="h5" align="center">
         Sign Up
       </Typography>
 
@@ -102,7 +102,7 @@ const SignUpLoginPage = () => {
       />
       <Button variant="contained" onClick={handleEmailSignIn} fullWidth>
         Sign In / Sign Up
-      </Button>
+      </Button> */}
       <GoogleAuth />
     </Box>
   );
