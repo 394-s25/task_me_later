@@ -10,7 +10,21 @@ import tml_logo_blue from "../imgs/tml_logo_blue.png";
 import Chip from "@mui/material/Chip";
 import ProjectTag from "./ProjectTag";
 import TaskMeLaterBlueLogo from "./TaskMeLaterBlueLogo";
+import { getAllTasks } from "../services/tasksService";
+import { useEffect } from "react";
+
 export default function TaskCardPreview() {
+  const [taskData, setTaskData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const tasks = await getAllTasks();
+      console.log("Fetched tasks from Firestore:", tasks);
+      setTaskData(tasks);
+    };
+    
+    fetchData();}, []);
+
   const [open, setOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(-1);
   const handleCardClick = (task) => {
@@ -21,7 +35,7 @@ export default function TaskCardPreview() {
     setOpen(false);
     setSelectedCard(-1);
   };
-
+  
   const ProgressChip = ({ taskItem }) => {
     return (
       <>
@@ -58,12 +72,12 @@ export default function TaskCardPreview() {
       </>
     );
   };
-
+  
   return (
     <>
       <div className="bg-gray-100 rounded-2xl">
         <div className="flex flex-wrap justify-center items-center mx-auto bg-gray">
-          {taskData2.tasks.map((taskItem) => (
+          {taskData.map((taskItem) => (
             <>
               <Card
                 className="w-35 m-3 border rounded-2xl"

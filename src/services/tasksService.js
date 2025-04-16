@@ -107,3 +107,17 @@ export const getTaskDetails = async (taskId) => {
         projectName: projectDoc?.pname || "",
     };
 };
+
+
+export const getAllTasks = async () => {
+    try {
+        const snapshot = await getDocs(collection(db, "tasks"));
+        return snapshot.docs.map((doc) => ({
+        id: doc.id, // Firestore doc ID
+        ...doc.data(),
+        }));
+    } catch (error) {
+        console.error("Error fetching tasks:", error);
+        return [];
+    }
+};
