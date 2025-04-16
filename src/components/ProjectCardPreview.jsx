@@ -28,7 +28,7 @@ export default function ProjectCardPreview() {
     const tasksCompleted = project.tasks_completed || 0;
     const tasksTotal = project.tasks_total || 0;
     const tasksRemaining = tasksTotal - tasksCompleted;
-    
+
     let status = "Completed";
     let chipColor = "lightgreen";
     let textColor = "black";
