@@ -44,12 +44,12 @@ export default function ProjectCardModal({
   const handleSignUp = (task) => {
     // Add the task to signedUpTasks
     setSignedUpTasks([...signedUpTasks, task]);
-    
+
     // Remove the task from availableTasks by filtering out the task with the same task_title
-    setAvailableTasks(availableTasks.filter(
-      (t) => t.task_title !== task.task_title
-    ));
-    
+    setAvailableTasks(
+      availableTasks.filter((t) => t.task_title !== task.task_title)
+    );
+
     console.log(`Signed up for task: ${task.task_title}`);
   };
 
@@ -68,6 +68,20 @@ export default function ProjectCardModal({
     if (progress === 100) return "Completed";
     if (progress === 0) return "Not Started";
     return "In Progress";
+  };
+
+  // Get background color based on task status
+  const getTaskStatusColor = (status) => {
+    switch (status) {
+      case "In Progress":
+        return "orange";
+      case "To Do":
+        return "red";
+      case "Completed":
+        return "green";
+      default:
+        return "gray";
+    }
   };
 
   return (
@@ -154,8 +168,7 @@ export default function ProjectCardModal({
                   label={task.name}
                   size="medium"
                   sx={{
-                    backgroundColor:
-                      task.status === "In Progress" ? "orange" : "green",
+                    backgroundColor: getTaskStatusColor(task.status),
                     color: "white",
                     fontSize: "14px",
                     padding: "20px 10px",
@@ -183,8 +196,7 @@ export default function ProjectCardModal({
                       label={task.name}
                       size="medium"
                       sx={{
-                        backgroundColor:
-                          task.status === "In Progress" ? "orange" : "green",
+                        backgroundColor: getTaskStatusColor(task.status),
                         color: "white",
                         fontSize: "14px",
                         padding: "20px 10px",
@@ -214,7 +226,7 @@ export default function ProjectCardModal({
                   task={{
                     ...task,
                     project: project.project_name,
-                    needsHelp: Math.random() > 0.5, // Random for demo purposes
+                    needsHelp: Math.random() > 0, // Random for demo purposes
                   }}
                   onClick={handleTaskClick}
                   onSignUp={handleSignUp}

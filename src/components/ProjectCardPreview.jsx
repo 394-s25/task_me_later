@@ -82,31 +82,35 @@ export default function ProjectCardPreview() {
   // Project card component to avoid duplicating code
   const ProjectCard = ({ projectItem }) => (
     <Card
-      className="w-35 m-3 border rounded-2xl"
+      className="w-35 m-3 border rounded-2xl h-52" // Added fixed height h-52 (13rem)
       onClick={() => {
         handleCardClick(projectItem);
         console.log(projectItem);
       }}
     >
-      <CardActionArea>
-        <CardContent>
-          <h1 className="font-bold mt-[-7px]">{projectItem.project_name}</h1>
-          <h1 className="text-[12px]">Due: {projectItem.due_date}</h1>
-          <hr />
+      <CardActionArea className="h-full">
+        <CardContent className="h-full flex flex-col">
+          <div>
+            <h1 className="font-bold mt-[-7px]">{projectItem.project_name}</h1>
+            <h1 className="text-[12px]">Due: {projectItem.due_date}</h1>
+          </div>
+          <hr className="my-2" />
           <div className="mt-1">
             <ProgressChip project={projectItem} />
           </div>
-          <hr className="mt-1" />
-          <p className="text-xs mt-1">
-            Tasks: {projectItem.tasks_completed} / {projectItem.tasks_total}
-          </p>
-          <div className="mt-2 w-full bg-gray-200 rounded-full h-1">
-            <div
-              className="bg-blue-600 h-1 rounded-full"
-              style={{
-                width: `${calculateProgress(projectItem)}%`,
-              }}
-            ></div>
+          <hr className="my-2" />
+          <div className="mt-auto">
+            <p className="text-xs mt-1">
+              Tasks: {projectItem.tasks_completed} / {projectItem.tasks_total}
+            </p>
+            <div className="mt-2 w-full bg-gray-200 rounded-full h-1">
+              <div
+                className="bg-blue-600 h-1 rounded-full"
+                style={{
+                  width: `${calculateProgress(projectItem)}%`,
+                }}
+              ></div>
+            </div>
           </div>
         </CardContent>
       </CardActionArea>
@@ -121,7 +125,7 @@ export default function ProjectCardPreview() {
           className="text-2xl font-bold mb-4 ml-4"
           style={{ color: "#77A1F3" }}
         >
-          Your Current Projects
+          My Current Projects
         </h2>
         <div className="grid grid-cols-2 gap-4 mx-auto">
           {currentProjects.length > 0 ? (
@@ -147,7 +151,7 @@ export default function ProjectCardPreview() {
           className="text-2xl font-bold mt-8 mb-4 ml-4"
           style={{ color: "#77A1F3" }}
         >
-          Your Past Projects
+          My Past Projects
         </h2>
         <div className="grid grid-cols-2 gap-4 mx-auto">
           {pastProjects.length > 0 ? (

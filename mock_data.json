@@ -130,13 +130,13 @@
   "projects": [
     {
       "project_id": 1,
-      "project_name": "Story Board Project",
-      "details": "This is the description for the project. It outlines the main objectives and goals that need to be accomplished.",
-      "due_date": "04/02/2025",
-      "tasks_completed": 1,
+      "project_name": "Task Me Later",
+      "details": "The Task Me Later app helps teams, classmates, and friend groups organize and share tasks in a more collaborative way.",
+      "due_date": "06/01/2025",
+      "tasks_completed": 2,
       "tasks_total": 5,
       "team_contributions": [
-        { "name": "Alex", "contribution": 80 },
+        { "name": "Me", "contribution": 80 },
         { "name": "Taylor", "contribution": 20 },
         { "name": "Jordan", "contribution": 0 },
         { "name": "Casey", "contribution": 0 }
@@ -147,17 +147,18 @@
           "status": "Completed",
           "id": 101
         },
-        { "name": "Finalise Page Design", "status": "In Progress", "id": 102 }
+        { "name": "Setup DB", "status": "In Progress", "id": 102 },
+        { "name": "Host Site", "status": "In Progress", "id": 103 }
       ],
       "team_tasks": [
         {
           "name": "Taylor",
           "tasks": [
-            { "name": "Make Presentation", "status": "Completed", "id": 103 },
+            { "name": "Make Presentation", "status": "Completed", "id": 104 },
             {
               "name": "Finalise Design With Team",
               "status": "In Progress",
-              "id": 104
+              "id": 105
             }
           ]
         }
@@ -175,52 +176,53 @@
       "notes": [
         {
           "user": "Me",
-          "notes": ["This is where my notes would go", "(if there are any)"]
+          "notes": ["Working on setting up database."]
         },
         {
           "user": "Taylor",
           "notes": [
-            "This is where team member 1's notes would go",
-            "(if there are any)"
+            "I have three color scheme options for the page design, need help deciding.",
+            "Presentation is done!"
           ]
         }
       ]
     },
     {
       "project_id": 2,
-      "project_name": "CYC Client Project",
+      "project_name": "Spotify",
       "details": "This is the description for the project. It outlines client requirements and key deliverables.",
       "due_date": "06/02/2025",
-      "tasks_completed": 1,
-      "tasks_total": 4,
+      "tasks_completed": 2,
+      "tasks_total": 5,
       "team_contributions": [
-        { "name": "Alex", "contribution": 60 },
+        { "name": "Me", "contribution": 60 },
         { "name": "Morgan", "contribution": 40 },
         { "name": "Riley", "contribution": 0 },
         { "name": "Jamie", "contribution": 0 }
       ],
       "my_tasks": [
         { "name": "Client Meeting Notes", "status": "Completed", "id": 201 },
-        { "name": "Wireframe Homepage", "status": "In Progress", "id": 202 }
+        { "name": "Routes", "status": "In Progress", "id": 202 },
+        { "name": "Presentation", "status": "To Do", "id": 203 }
       ],
       "team_tasks": [
         {
           "name": "Morgan",
           "tasks": [
-            { "name": "Design Logo Options", "status": "Completed", "id": 203 },
+            { "name": "Design New Logo Options", "status": "Completed", "id": 204 },
             {
-              "name": "Create Color Palette",
+              "name": "Create Demo",
               "status": "In Progress",
-              "id": 204
+              "id": 205
             }
           ]
         }
       ],
       "available_tasks": [
         {
-          "task_title": "Set Up Analytics",
+          "task_title": "Create Demo",
           "due_date": "05/25/2025",
-          "task_details": "Implement Google Analytics for the client website.",
+          "task_details": "Record demo for showcase",
           "task_score": 70,
           "task_match": 65,
           "priority": "Medium Priority"
@@ -245,20 +247,20 @@
     },
     {
       "project_id": 3,
-      "project_name": "CS 3XX Project",
-      "details": "This is the description for the project. Final project for the course that demonstrates applying concepts learned.",
+      "project_name": "Pinterest",
+      "details": "Final project for the CS course that demonstrates applying concepts learned.",
       "due_date": "05/01/2025",
       "tasks_completed": 0,
-      "tasks_total": 5,
+      "tasks_total": 4,
       "team_contributions": [
-        { "name": "Alex", "contribution": 25 },
-        { "name": "Drew", "contribution": 25 },
-        { "name": "Parker", "contribution": 25 },
-        { "name": "Quinn", "contribution": 25 }
+        { "name": "Me", "contribution": 0 },
+        { "name": "Drew", "contribution": 0 },
+        { "name": "Parker", "contribution": 0 },
+        { "name": "Quinn", "contribution": 0 }
       ],
       "my_tasks": [
-        { "name": "Set Up Repository", "status": "To Do", "id": 301 },
-        { "name": "Create Project Plan", "status": "To Do", "id": 302 }
+        { "name": "CI/CD", "status": "To Do", "id": 301 },
+        { "name": "Unit Tests", "status": "To Do", "id": 302 }
       ],
       "team_tasks": [
         {
@@ -269,16 +271,7 @@
           ]
         }
       ],
-      "available_tasks": [
-        {
-          "task_title": "Write Unit Tests",
-          "due_date": "04/25/2025",
-          "task_details": "Create comprehensive test suite for core functionality.",
-          "task_score": 90,
-          "task_match": 75,
-          "priority": "High Priority"
-        }
-      ],
+      "available_tasks": [],
       "notes": [
         {
           "user": "Me",
@@ -295,16 +288,14 @@
     },
     {
       "project_id": 4,
-      "project_name": "Random Past Project",
-      "details": "This is the description for the project. An archived project that has been completed.",
+      "project_name": "Psychology Research Project",
+      "details": "Research on consumer tendencies.",
       "due_date": "01/15/2025",
-      "tasks_completed": 5,
-      "tasks_total": 5,
+      "tasks_completed": 4,
+      "tasks_total": 4,
       "team_contributions": [
-        { "name": "Alex", "contribution": 70 },
-        { "name": "Sam", "contribution": 30 },
-        { "name": "N/A", "contribution": 0 },
-        { "name": "N/A", "contribution": 0 }
+        { "name": "Me", "contribution": 70 },
+        { "name": "Sam", "contribution": 30 }
       ],
       "my_tasks": [
         { "name": "Final Report", "status": "Completed", "id": 401 },
