@@ -36,7 +36,7 @@ export default function TaskCardModal({ task, open, onClose, setTask }) {
         TransitionComponent={Transition}
         sx={{ backgroundColor: "#8db1fd" }}
       >
-        <AppBar sx={{ position: "relative" }}>
+        <AppBar sx={{ position: "relative", backgroundColor: "#77A1F3" }}>
           <Toolbar>
             <IconButton
               edge="start"
