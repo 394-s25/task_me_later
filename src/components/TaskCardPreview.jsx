@@ -10,20 +10,20 @@ import tml_logo_blue from "../imgs/tml_logo_blue.png";
 import Chip from "@mui/material/Chip";
 import ProjectTag from "./ProjectTag";
 import TaskMeLaterBlueLogo from "./TaskMeLaterBlueLogo";
-import { getAllTasks } from "../services/tasksService";
+// import { getAllTasks } from "../services/tasksService";
 import { useEffect } from "react";
 
 export default function TaskCardPreview() {
   const [taskData, setTaskData] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const tasks = await getAllTasks();
-      console.log("Fetched tasks from Firestore:", tasks);
-      setTaskData(tasks);
-    };
-    
-    fetchData();}, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const tasks = await getAllTasks();
+  //     console.log("Fetched tasks from Firestore:", tasks);
+  //     setTaskData(tasks);
+  //   };
+
+  //   fetchData();}, []);
 
   const [open, setOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(-1);
@@ -35,7 +35,7 @@ export default function TaskCardPreview() {
     setOpen(false);
     setSelectedCard(-1);
   };
-  
+
   const ProgressChip = ({ taskItem }) => {
     return (
       <>
@@ -72,7 +72,7 @@ export default function TaskCardPreview() {
       </>
     );
   };
-  
+
   return (
     <>
       <div className="bg-gray-100 rounded-2xl">
