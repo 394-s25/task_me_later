@@ -1,6 +1,3 @@
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
-
 export const firebaseConfig = {
   apiKey: "AIzaSyDKa1TSzuNER1HuZ6k9FJGh0loeBdwYeic",
   authDomain: "task-me-later.firebaseapp.com",
@@ -10,8 +7,3 @@ export const firebaseConfig = {
   appId: "1:340212522916:web:60764ab9ce58d1f7dfab31",
   measurementId: "G-Q0HR9MZ34Q",
 };
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-export { db };
