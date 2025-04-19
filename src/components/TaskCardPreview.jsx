@@ -139,6 +139,7 @@ export default function TaskCardPreview() {
                 open={open}
                 onClose={handleDialogClose}
                 setTask={setSelectedCard}
+                allTasks={taskData}
               />
             </>
           ))}

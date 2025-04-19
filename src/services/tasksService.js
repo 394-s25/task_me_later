@@ -117,7 +117,9 @@ export const getAllTasks = async () => {
         let projectName = null;
         if (data.parent_project) {
           const projectSnap = await getDoc(data.parent_project);
-          projectName = projectSnap.exists() ? projectSnap.data().name : "";
+          projectName = projectSnap.exists()
+            ? projectSnap.data().project_name
+            : "";
         }
         return {
           id: doc.id,
