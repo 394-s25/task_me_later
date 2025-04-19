@@ -22,8 +22,9 @@ export default function TaskCardPreview() {
       console.log("Fetched tasks from Firestore:", tasks);
       setTaskData(tasks);
     };
-    
-    fetchData();}, []);
+
+    fetchData();
+  }, []);
 
   const [open, setOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(-1);
@@ -35,7 +36,7 @@ export default function TaskCardPreview() {
     setOpen(false);
     setSelectedCard(-1);
   };
-  
+
   const ProgressChip = ({ taskItem }) => {
     return (
       <>
@@ -72,7 +73,7 @@ export default function TaskCardPreview() {
       </>
     );
   };
-  
+
   return (
     <>
       <div className="bg-gray-100 rounded-2xl">
@@ -87,7 +88,7 @@ export default function TaskCardPreview() {
                 }}
               >
                 <CardActionArea>
-                  <ProjectTag project={taskItem.parent_project} />
+                  <ProjectTag project={taskItem.projectName} />
                   <CardContent>
                     <h1 className="font-bold mt-[-7px]">
                       {taskItem.task_title}
