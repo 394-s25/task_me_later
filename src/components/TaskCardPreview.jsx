@@ -3,13 +3,15 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardActionArea from "@mui/material/CardActionArea";
 import { Button } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TaskCardModal from "./TaskCardModal";
 import taskData2 from "../../mock_data.json";
 import tml_logo_blue from "../imgs/tml_logo_blue.png";
 import Chip from "@mui/material/Chip";
 import ProjectTag from "./ProjectTag";
 import TaskMeLaterBlueLogo from "./TaskMeLaterBlueLogo";
+import { getUsersTasks } from "../services/tasksServices";
+
 export default function TaskCardPreview() {
   const [open, setOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(-1);
@@ -21,6 +23,17 @@ export default function TaskCardPreview() {
     setOpen(false);
     setSelectedCard(-1);
   };
+  
+  const [taskData, setTaskData] = useState([]);
+  useEffect(() => {
+  const fetchData = async () => {
+    const taskData = await getUsersTasks(); // or getSignupTasks()
+    //console.log("Fetched tasks:", tasks);
+    setTaskData(taskData);
+    //console.log("Task data:", taskData);
+  };
+  fetchData();
+}, []);
 
   const ProgressChip = ({ taskItem }) => {
     return (
@@ -58,12 +71,12 @@ export default function TaskCardPreview() {
       </>
     );
   };
-
+  
   return (
     <>
       <div className="bg-gray-100 rounded-2xl">
         <div className="flex flex-wrap justify-center items-center mx-auto bg-gray">
-          {taskData2.tasks.map((taskItem) => (
+          {taskData.map((taskItem) => (
             <>
               <Card
                 className="w-35 m-3 border rounded-2xl"
@@ -73,7 +86,7 @@ export default function TaskCardPreview() {
                 }}
               >
                 <CardActionArea>
-                  <ProjectTag project={taskItem.parent_project} />
+                  <ProjectTag project={taskItem.project_name} />
                   <CardContent>
                     <h1 className="font-bold mt-[-7px]">
                       {taskItem.task_title}

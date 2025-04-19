@@ -9,8 +9,11 @@ import React, {
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import { firebaseConfig } from "./firestoreConfig";
 import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
 
 const app = initializeApp(firebaseConfig);
+
+export const db = getFirestore(app);
 
 type AuthContextType = {
   user: User | null;
