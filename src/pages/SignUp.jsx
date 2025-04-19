@@ -6,6 +6,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
 } from "firebase/auth";
+import { createUser, getUserById } from "../services/usersService";
 import { TextField, Button, Box, Typography } from "@mui/material";
 import GoogleAuth from "../components/GoogleAuth";
 import { useNavigate } from "react-router-dom";
@@ -19,8 +20,8 @@ const SignUpLoginPage = () => {
 
   const checkUserExists = async (uid) => {
     try {
-      const res = await fetch(`http://localhost:3001/api/users/${uid}`);
-      return res.status === 200;
+      const user = await getUserById(uid);
+      return user !== null;
     } catch (err) {
       console.error("Error checking user existence:", err);
       return false;
@@ -32,13 +33,15 @@ const SignUpLoginPage = () => {
     if (exists) {
       navigate("/");
     } else {
-      navigate("/create-account");
+      await createUser(user);
+      navigate("/create_account");
     }
   };
 
   const handleEmailSignIn = async () => {
     try {
-      const result = await signInWithEmailAndPassword(auth, email, password);
+      const response = await signInWithEmailAndPassword(auth, email, password);
+      const result = response.data();
       await handlePostLogin(result.user);
     } catch (error) {
       if (error.code === "auth/user-not-found") {
@@ -52,6 +55,8 @@ const SignUpLoginPage = () => {
         } catch (createError) {
           console.error("Error creating user:", createError.message);
         }
+      } else if (error.message === "EMAIL_NOT_FOUND") {
+        console.log("caught the email not found");
       } else {
         console.error("Sign-in error:", error.message);
       }
