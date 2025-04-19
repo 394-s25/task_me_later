@@ -13,6 +13,7 @@ import TaskMeLaterBlueLogo from "./TaskMeLaterBlueLogo";
 import { getUsersTasks } from "../services/tasksServices";
 
 export default function TaskCardPreview() {
+
   const [open, setOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(-1);
   const handleCardClick = (task) => {
@@ -137,6 +138,7 @@ export default function TaskCardPreview() {
                 open={open}
                 onClose={handleDialogClose}
                 setTask={setSelectedCard}
+                allTasks={taskData}
               />
             </>
           ))}

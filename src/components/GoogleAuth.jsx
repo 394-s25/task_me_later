@@ -1,5 +1,4 @@
 import { useGoogleLogin } from "@react-oauth/google";
-import axios from "axios";
 import {
   getAuth,
   signInWithCredential,
@@ -8,6 +7,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
+import { getDoc, doc, setDoc } from "firebase/firestore";
+import { db } from "../services/firestoreConfig";
 
 const GoogleAuth = () => {
   const navigate = useNavigate();
@@ -20,13 +21,18 @@ const GoogleAuth = () => {
           tokenResponse.access_token
         );
         const auth = getAuth();
-        await signInWithCredential(auth, credential);
-        await axios.get("https://www.googleapis.com/oauth2/v3/userinfo", {
-          headers: {
-            Authorization: `Bearer ${tokenResponse.access_token}`,
-          },
-        });
-        navigate("/");
+        const result = await signInWithCredential(auth, credential);
+        const user = result.user;
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
+        if (!userSnap.exists()) {
+          await setDoc(userRef, {
+            email: user.email,
+          });
+          navigate("/create_account");
+        } else {
+          navigate("/");
+        }
       } catch (err) {
         console.error("Login or fetch error:", err);
       }
