@@ -40,8 +40,7 @@ const SignUpLoginPage = () => {
 
   const handleEmailSignIn = async () => {
     try {
-      const response = await signInWithEmailAndPassword(auth, email, password);
-      const result = response.data();
+      const result = await signInWithEmailAndPassword(auth, email, password);
       await handlePostLogin(result.user);
     } catch (error) {
       if (error.code === "auth/user-not-found") {
