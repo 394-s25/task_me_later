@@ -10,7 +10,22 @@ import tml_logo_blue from "../imgs/tml_logo_blue.png";
 import Chip from "@mui/material/Chip";
 import ProjectTag from "./ProjectTag";
 import TaskMeLaterBlueLogo from "./TaskMeLaterBlueLogo";
+import { getAllTasks } from "../services/tasksService";
+import { useEffect } from "react";
+
 export default function TaskCardPreview() {
+  const [taskData, setTaskData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const tasks = await getAllTasks();
+      console.log("Fetched tasks from Firestore:", tasks);
+      setTaskData(tasks);
+    };
+
+    fetchData();
+  }, []);
+
   const [open, setOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(-1);
   const handleCardClick = (task) => {
@@ -63,7 +78,7 @@ export default function TaskCardPreview() {
     <>
       <div className="bg-gray-100 rounded-2xl">
         <div className="flex flex-wrap justify-center items-center mx-auto bg-gray">
-          {taskData2.tasks.map((taskItem) => (
+          {taskData.map((taskItem) => (
             <>
               <Card
                 className="w-35 m-3 border rounded-2xl"
@@ -73,7 +88,7 @@ export default function TaskCardPreview() {
                 }}
               >
                 <CardActionArea>
-                  <ProjectTag project={taskItem.parent_project} />
+                  <ProjectTag project={taskItem.projectName} />
                   <CardContent>
                     <h1 className="font-bold mt-[-7px]">
                       {taskItem.task_title}
@@ -124,6 +139,7 @@ export default function TaskCardPreview() {
                 open={open}
                 onClose={handleDialogClose}
                 setTask={setSelectedCard}
+                allTasks={taskData}
               />
             </>
           ))}

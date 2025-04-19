@@ -4,7 +4,25 @@ import { collection, addDoc, getFirestore, getDocs } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  OutlinedInput,
+  Box,
+  Chip,
+  MenuItem,
+} from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import { postNewProject } from "../services/projectService";
 
+function getStyles(name, personName, theme) {
+  return {
+    fontWeight: personName.includes(name)
+      ? theme.typography.fontWeightMedium
+      : theme.typography.fontWeightRegular,
+  };
+}
 function ProjectTextInput({ inputType, placeHolder, value, valueSetter }) {
   return (
     <input
@@ -28,10 +46,20 @@ export default function AddNewProject() {
   const [myTasks, setMyTasks] = useState([{}]);
   const [teamTasks, setTeamTasks] = useState([{}]);
   const [availableTasks, setAvailableTasks] = useState([{}]);
-  const [projectNotes, setProjectNotes] = useState([{}]);
-
+  const [projNotes, setProjNotes] = useState([{}]);
   const [projId, setProjId] = useState(null);
-
+  const [projMembers, setProjMembers] = useState([]);
+  const theme = useTheme();
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
   useEffect(() => {
     const fetchMaxID = async () => {
       try {
@@ -48,21 +76,33 @@ export default function AddNewProject() {
 
     fetchMaxID();
   }, []);
+
   const handleAddProject = async (e) => {
     e.preventDefault();
-    console.log({ projName, projDetails, projDueDate, projId });
+    console.log({ projId, projName, projDetails, projDueDate, projMembers });
+
     setProjName("");
     setProjDetails("");
     setProjDueDate("");
-    setTasksTotal(NaN);
+    setProjMembers([]);
   };
 
+  const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setProjMembers(
+      // On autofill we get a stringified value.
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
   const handleDefaultButton = () => {
     setProjName("DefaultProjName");
     setProjDetails("DefaultProjDetails");
     setProjDueDate("DefaultProjDueDate");
-    setTasksTotal(1);
+    setProjMembers(["Member0", "Member1"]);
   };
+  const name = ["Member0", "Member1"];
 
   return (
     <>
@@ -86,24 +126,37 @@ export default function AddNewProject() {
             value={projDueDate}
             valueSetter={setProjDueDate}
           />
-          {/* <ProjectTextInput
-            inputType={"number"}
-            placeHolder={"Number Of Tasks"}
-            value={tasksTotal}
-            valueSetter={setTasksTotal}
-          /> */}
-          {/* <ProjectTextInput
-            inputType={"string"}
-            placeHolder={"Project Name"}
-            value={projName}
-            valueSetter={setProjName}
-          />
-          <ProjectTextInput
-            inputType={"string"}
-            placeHolder={"Project Name"}
-            value={projName}
-            valueSetter={setProjName}
-          /> */}
+          <div>
+            <FormControl sx={{ m: 1, width: 300 }}>
+              <InputLabel id="demo-multiple-chip-label">Chip</InputLabel>
+              <Select
+                labelId="demo-multiple-chip-label"
+                id="demo-multiple-chip"
+                multiple
+                value={projMembers}
+                onChange={handleChange}
+                input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+                renderValue={(selected) => (
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                    {selected.map((value) => (
+                      <Chip key={value} label={value} />
+                    ))}
+                  </Box>
+                )}
+                MenuProps={MenuProps}
+              >
+                {name.map((name) => (
+                  <MenuItem
+                    key={name}
+                    value={name}
+                    style={getStyles(name, projMembers, theme)}
+                  >
+                    {name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
           <button type="submit">SUBMIT</button>
         </div>
       </form>
