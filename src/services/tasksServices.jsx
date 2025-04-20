@@ -1,4 +1,4 @@
-import { db } from "./userProvider";
+import { db } from "./firestoreConfig";
 import { collection, getDocs, getDoc, query, where } from "firebase/firestore";
 
 export const getUsersTasks = async () => {
