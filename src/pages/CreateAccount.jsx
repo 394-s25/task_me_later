@@ -10,6 +10,10 @@ import Chip from "@mui/material/Chip";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { SkillsForSignUpPage } from "../components/SkillsForSignUpPage";
+import { db } from "../services/firestoreConfig";
+import { doc, updateDoc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -35,19 +39,23 @@ export default function SignUp() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [skills, setSkills] = useState([]);
   const theme = useTheme();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:3001/api/users", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ aboutMe, phoneNumber, skills }),
+      const user = getAuth().currentUser;
+      if (!user) {
+        throw new Error("No user found");
+      }
+      const userRef = doc(db, "users", user.uid);
+      await updateDoc(userRef, {
+        aboutMe,
+        phoneNumber,
+        skills,
       });
-
-      const data = await response.json();
-      console.log("Response:", data);
+      navigate("/");
     } catch (err) {
       console.error("Error submitting form:", err);
     }

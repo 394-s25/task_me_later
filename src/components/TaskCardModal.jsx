@@ -15,11 +15,18 @@ import taskData2 from "../../mock_data.json";
 import tml_logo_white from "../imgs/tml_logo_white.png";
 import TaskCardModalStatus from "./TaskCardModalStatus";
 import { Chip } from "@mui/material";
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function TaskCardModal({ task, open, onClose, setTask }) {
+export default function TaskCardModal({
+  task,
+  open,
+  onClose,
+  setTask,
+  allTasks,
+}) {
   if (!task) return null;
   const getRandomHexColor = () =>
     "#" +
@@ -58,7 +65,7 @@ export default function TaskCardModal({ task, open, onClose, setTask }) {
         <div class="text-center mt-2 mb-3">
           <h1 class="text-[40px] font-bold">{task.task_title}</h1>
           <h2 class="text-[20px] mt-[-5px]">
-            <b>{task.parent_project}</b> Project
+            <b>{task.projectName || "Unknown project"}</b>
           </h2>
         </div>
         <div class="w-[90%] mx-auto">
@@ -87,7 +94,7 @@ export default function TaskCardModal({ task, open, onClose, setTask }) {
                       color: "white",
                     }}
                     onClick={() => {
-                      const nextTask = taskData2.tasks.find(
+                      const nextTask = allTasks.find(
                         (t) => t.task_title === proj_dep
                       );
                       if (nextTask) {
