@@ -5,10 +5,8 @@ const Login = () => {
   return (
     <>
       <TaskMeLaterBlueLogo />
-      <div class="flex flex-col items-center">
-        <GoogleAuth />
-      </div>
-      <SignUp />
+      <GoogleAuth />
+      {/* <SignUp /> */}
     </>
   );
 };
