@@ -9,10 +9,24 @@ import {
   onSnapshot,
   addDoc,
 } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 export const getUsersTasks = (callback) => {
   try {
-    const q = query(collection(db, "tasks"), where("help_req", "==", false));
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (!user) {
+      console.warn("No auth user found");
+      callback([]);
+      return () => {};
+    }
+
+    const q = query(
+      collection(db, "tasks"),
+      where("help_req", "==", false),
+      where("assigned_to", "==", user.uid)
+    );
 
     const unsubscribe = onSnapshot(
       q,
@@ -102,9 +116,12 @@ export const getSignupTasks = (callback) => {
 
 export const signUpForTask = async (taskId) => {
   try {
+    const auth = getAuth();
+    const user = auth.currentUser;
     const taskRef = doc(db, "tasks", taskId);
     await updateDoc(taskRef, {
       help_req: false,
+      assigned_to: user?.uid || null,
     });
   } catch (error) {
     console.error("Error signing up for task:", error);
