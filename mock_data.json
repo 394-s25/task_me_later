@@ -2,63 +2,331 @@
   "tasks": [
     {
       "task_title": "Setup DB",
-      "parent_project": "proj_1",
+      "parent_project": "Task Me Later",
       "due_date": "4/5/25",
-      "project_dependencies": ["depend_1", "depend_2"],
+      "project_dependencies": ["Host site"],
       "task_score": 5,
       "task_match": 50,
       "task_id": 0,
-      "task_status": "In Progress"
+      "task_status": "In Progress",
+      "task_details": "We need to connect our database to our site. There is a bunch of great documentation online and a ton of great video tutorials too.",
+      "task_notes": [
+        {
+          "user": "Ehulises",
+          "details": "I want to get better at back-end development. I'd love to help!"
+        },
+        {
+          "user": "Mona",
+          "details": "Yes!"
+        }
+      ]
     },
     {
       "task_title": "Host site",
-      "parent_project": "proj_1",
+      "parent_project": "Task Me Later",
       "due_date": "4/6/25",
-      "project_dependencies": ["depend_1", "depend_2"],
+      "project_dependencies": ["Setup DB"],
       "task_score": 7,
       "task_match": 80,
       "task_id": 1,
-      "task_status": "In Progress"
+      "task_status": "In Progress",
+      "task_details": "We need to set up web-hosting on firebase. I think that the url task-me-later.web.app is available. I guess we'll see.",
+      "task_notes": [
+        {
+          "user": "Mona",
+          "details": "I think Vercel is also a good method."
+        },
+        {
+          "user": "Ehulises",
+          "details": "Great idea!"
+        }
+      ]
     },
     {
       "task_title": "CI/CD",
-      "parent_project": "proj_2",
+      "parent_project": "Pinterest",
       "due_date": "6/8/25",
-      "project_dependencies": ["depend_1", "depend_2"],
+      "project_dependencies": ["Unit Tests"],
       "task_score": 2,
       "task_match": 30,
       "task_id": 2,
-      "task_status": "To Do"
+      "task_status": "To Do",
+      "task_details": "We need to set up auto-deploying to the project. We should look into GitHub Actions or Jenkins for this. ",
+      "task_notes": [
+        {
+          "user": "Don",
+          "details": "Great idea!"
+        },
+        {
+          "user": "Bella",
+          "details": "I've always wanted to learn how to do this!"
+        }
+      ]
     },
     {
       "task_title": "Unit Tests",
-      "parent_project": "proj_2",
+      "parent_project": "Pinterest",
       "due_date": "5/6/25",
-      "project_dependencies": ["depend_1", "depend_2"],
+      "project_dependencies": ["CI/CD"],
       "task_score": 9,
       "task_match": 40,
       "task_id": 3,
-      "task_status": "To Do"
+      "task_status": "To Do",
+      "task_details": "We need to look into vitest to complete this task. There's great documentation online about it.",
+      "task_notes": [
+        {
+          "user": "Bella",
+          "details": "This was a goal that I had for this class!"
+        },
+        {
+          "user": "Don",
+          "details": "Great idea!"
+        }
+      ]
     },
     {
       "task_title": "Routes",
-      "parent_project": "proj_4",
+      "parent_project": "Spotify",
       "due_date": "4/5/25",
-      "project_dependencies": ["depend_1", "depend_2"],
-      "task_score": 5,
-      "task_match": 50,
+      "project_dependencies": ["Presentation"],
+      "task_score": 10,
+      "task_match": 21,
       "task_id": 4,
-      "task_status": "In Progress"
+      "task_status": "In Progress",
+      "task_details": "We need to set up Routes for our project so that people are able to switch between different tabs.",
+      "task_notes": [
+        {
+          "user": "Luke",
+          "details": "I've used this before, it's a great idea."
+        },
+        {
+          "user": "Arch",
+          "details": "Amazing!"
+        }
+      ]
     },
     {
       "task_title": "Presentation",
-      "parent_project": "proj_4",
+      "parent_project": "Spotify",
       "due_date": "4/5/25",
-      "project_dependencies": ["depend_1", "depend_2"],
-      "task_score": 5,
-      "task_match": 50,
+      "project_dependencies": ["Routes"],
+      "task_score": 90,
+      "task_match": 27,
       "task_id": 4,
-      "task_status": "To Do"
+      "task_status": "To Do",
+      "task_details": "We have to make our slide deck for Wednesday. We may click this component for the presentation.",
+      "task_notes": [
+        {
+          "user": "Arch",
+          "details": "I think this is a good idea. I've always wanted to use Jenkins"
+        },
+        {
+          "user": "Luke",
+          "details": "Right on!"
+        }
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "project_id": 1,
+      "project_name": "Task Me Later",
+      "details": "The Task Me Later app helps teams, classmates, and friend groups organize and share tasks in a more collaborative way.",
+      "due_date": "06/01/2025",
+      "tasks_completed": 2,
+      "tasks_total": 5,
+      "team_contributions": [
+        { "name": "Me", "contribution": 80 },
+        { "name": "Taylor", "contribution": 20 },
+        { "name": "Jordan", "contribution": 0 },
+        { "name": "Casey", "contribution": 0 }
+      ],
+      "my_tasks": [
+        {
+          "name": "Finalise Page Selection With Team",
+          "status": "Completed",
+          "id": 101
+        },
+        { "name": "Setup DB", "status": "In Progress", "id": 102 },
+        { "name": "Host Site", "status": "In Progress", "id": 103 }
+      ],
+      "team_tasks": [
+        {
+          "name": "Taylor",
+          "tasks": [
+            { "name": "Make Presentation", "status": "Completed", "id": 104 },
+            {
+              "name": "Finalise Design With Team",
+              "status": "In Progress",
+              "id": 105
+            }
+          ]
+        }
+      ],
+      "available_tasks": [
+        {
+          "task_title": "Finalise Design With Team",
+          "due_date": "04/02/2025",
+          "task_details": "This is the description for the task.",
+          "task_score": 85,
+          "task_match": 80,
+          "priority": "High Priority"
+        }
+      ],
+      "notes": [
+        {
+          "user": "Me",
+          "notes": ["Working on setting up database."]
+        },
+        {
+          "user": "Taylor",
+          "notes": [
+            "I have three color scheme options for the page design, need help deciding.",
+            "Presentation is done!"
+          ]
+        }
+      ]
+    },
+    {
+      "project_id": 2,
+      "project_name": "Spotify",
+      "details": "This is the description for the project. It outlines client requirements and key deliverables.",
+      "due_date": "06/02/2025",
+      "tasks_completed": 2,
+      "tasks_total": 5,
+      "team_contributions": [
+        { "name": "Me", "contribution": 60 },
+        { "name": "Morgan", "contribution": 40 },
+        { "name": "Riley", "contribution": 0 },
+        { "name": "Jamie", "contribution": 0 }
+      ],
+      "my_tasks": [
+        { "name": "Client Meeting Notes", "status": "Completed", "id": 201 },
+        { "name": "Routes", "status": "In Progress", "id": 202 },
+        { "name": "Presentation", "status": "To Do", "id": 203 }
+      ],
+      "team_tasks": [
+        {
+          "name": "Morgan",
+          "tasks": [
+            { "name": "Design New Logo Options", "status": "Completed", "id": 204 },
+            {
+              "name": "Create Demo",
+              "status": "In Progress",
+              "id": 205
+            }
+          ]
+        }
+      ],
+      "available_tasks": [
+        {
+          "task_title": "Create Demo",
+          "due_date": "05/25/2025",
+          "task_details": "Record demo for showcase",
+          "task_score": 70,
+          "task_match": 65,
+          "priority": "Medium Priority"
+        }
+      ],
+      "notes": [
+        {
+          "user": "Me",
+          "notes": [
+            "Client prefers blue color scheme",
+            "Need to schedule follow-up meeting"
+          ]
+        },
+        {
+          "user": "Morgan",
+          "notes": [
+            "Found great reference designs",
+            "Client wants minimalist approach"
+          ]
+        }
+      ]
+    },
+    {
+      "project_id": 3,
+      "project_name": "Pinterest",
+      "details": "Final project for the CS course that demonstrates applying concepts learned.",
+      "due_date": "05/01/2025",
+      "tasks_completed": 0,
+      "tasks_total": 4,
+      "team_contributions": [
+        { "name": "Me", "contribution": 0 },
+        { "name": "Drew", "contribution": 0 },
+        { "name": "Parker", "contribution": 0 },
+        { "name": "Quinn", "contribution": 0 }
+      ],
+      "my_tasks": [
+        { "name": "CI/CD", "status": "To Do", "id": 301 },
+        { "name": "Unit Tests", "status": "To Do", "id": 302 }
+      ],
+      "team_tasks": [
+        {
+          "name": "Drew",
+          "tasks": [
+            { "name": "Research API Options", "status": "To Do", "id": 303 },
+            { "name": "Set Up Authentication", "status": "To Do", "id": 304 }
+          ]
+        }
+      ],
+      "available_tasks": [],
+      "notes": [
+        {
+          "user": "Me",
+          "notes": [
+            "Need to review class materials on authentication",
+            "Ask professor about API requirements"
+          ]
+        },
+        {
+          "user": "Drew",
+          "notes": ["Found helpful tutorial for the API integration"]
+        }
+      ]
+    },
+    {
+      "project_id": 4,
+      "project_name": "Psychology Research Project",
+      "details": "Research on consumer tendencies.",
+      "due_date": "01/15/2025",
+      "tasks_completed": 4,
+      "tasks_total": 4,
+      "team_contributions": [
+        { "name": "Me", "contribution": 70 },
+        { "name": "Sam", "contribution": 30 }
+      ],
+      "my_tasks": [
+        { "name": "Final Report", "status": "Completed", "id": 401 },
+        { "name": "Data Analysis", "status": "Completed", "id": 402 }
+      ],
+      "team_tasks": [
+        {
+          "name": "Sam",
+          "tasks": [
+            { "name": "Create Presentation", "status": "Completed", "id": 403 },
+            { "name": "Research Background", "status": "Completed", "id": 404 }
+          ]
+        }
+      ],
+      "available_tasks": [],
+      "notes": [
+        {
+          "user": "Me",
+          "notes": [
+            "Project completed on time and received positive feedback",
+            "Could use as reference for future projects"
+          ]
+        },
+        {
+          "user": "Sam",
+          "notes": [
+            "The presentation went smoothly",
+            "Audience had good questions"
+          ]
+        }
+      ]
     }
   ]
 }

@@ -6,9 +6,10 @@ import { Button } from "@mui/material";
 import { useState } from "react";
 import TaskCardModal from "./TaskCardModal";
 import taskData2 from "../../mock_data.json";
-import tml_logo from "../imgs/tml_logo.png";
+import tml_logo_blue from "../imgs/tml_logo_blue.png";
 import Chip from "@mui/material/Chip";
-
+import ProjectTag from "./ProjectTag";
+import TaskMeLaterBlueLogo from "./TaskMeLaterBlueLogo";
 export default function TaskCardPreview() {
   const [open, setOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(-1);
@@ -21,13 +22,46 @@ export default function TaskCardPreview() {
     setSelectedCard(-1);
   };
 
+  const ProgressChip = ({ taskItem }) => {
+    return (
+      <>
+        {taskItem.task_status === "Completed" ? (
+          <Chip
+            label={taskItem.task_status}
+            size="small"
+            style={{
+              backgroundColor: "lightgreen",
+              color: "black",
+            }}
+          />
+        ) : taskItem.task_status === "In Progress" ? (
+          <Chip
+            label={taskItem.task_status}
+            size="small"
+            style={{
+              backgroundColor: "orange",
+              color: "black",
+            }}
+          />
+        ) : (
+          taskItem.task_status === "To Do" && (
+            <Chip
+              label={taskItem.task_status}
+              size="small"
+              style={{
+                backgroundColor: "red",
+                color: "white",
+              }}
+            />
+          )
+        )}
+      </>
+    );
+  };
+
   return (
     <>
-      <img
-        className="p-3 mx-auto items-center min-h-[100%]"
-        src={tml_logo}
-      ></img>
-      <div className="bg-gray-100 rounded-2xl ">
+      <div className="bg-gray-100 rounded-2xl">
         <div className="flex flex-wrap justify-center items-center mx-auto bg-gray">
           {taskData2.tasks.map((taskItem) => (
             <>
@@ -39,42 +73,15 @@ export default function TaskCardPreview() {
                 }}
               >
                 <CardActionArea>
+                  <ProjectTag project={taskItem.parent_project} />
                   <CardContent>
-                    <h1 className="font-bold">{taskItem.task_title}</h1>
+                    <h1 className="font-bold mt-[-7px]">
+                      {taskItem.task_title}
+                    </h1>
                     <h1 className="text-[12px]">Due: {taskItem.due_date}</h1>
                     <hr />
                     <div className="mt-1">
-                      {taskItem.task_status === "Completed" ? (
-                        <Chip
-                          label={taskItem.task_status}
-                          size="small"
-                          style={{
-                            backgroundColor: "lightgreen",
-                            color: "black",
-                          }}
-                        />
-                      ) : taskItem.task_status === "In Progress" ? (
-                        <Chip
-                          label={taskItem.task_status}
-                          size="small"
-                          style={{
-                            backgroundColor: "orange",
-                            color: "black",
-                          }}
-                        />
-                      ) : (
-                        taskItem.task_status === "To Do" && (
-                          <Chip
-                            label={taskItem.task_status}
-                            size="small"
-                            style={{
-                              backgroundColor: "red",
-                              color: "white",
-                            }}
-                          />
-                        )
-                      )}
-
+                      <ProgressChip taskItem={taskItem} />
                       {/* <Chip label="success" color="success" size="small" /> */}
                       {/* </Stack> */}
                     </div>
@@ -109,14 +116,6 @@ export default function TaskCardPreview() {
                         MARK DONE
                       </Button>
                     </div>
-                    {/* <Typography
-                      variant="body2"
-                      sx={{ color: "text.secondary" }}
-                    >
-                      {taskItem.task_score}
-                      <br />
-                      {taskItem.task_match}
-                    </Typography> */}
                   </CardContent>
                 </CardActionArea>
               </Card>
@@ -124,6 +123,7 @@ export default function TaskCardPreview() {
                 task={selectedCard}
                 open={open}
                 onClose={handleDialogClose}
+                setTask={setSelectedCard}
               />
             </>
           ))}
