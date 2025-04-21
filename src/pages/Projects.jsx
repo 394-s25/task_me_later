@@ -1,10 +1,15 @@
+import ProjectCardPreview from "../components/ProjectCardPreview";
 import NavBar from "../components/NavBar";
+import TaskMeLaterBlueLogo from "../components/TaskMeLaterBlueLogo";
+
 const Projects = () => {
   return (
     <>
-      <h1>Projects Page</h1>
+      <TaskMeLaterBlueLogo />
+      <ProjectCardPreview />
       <NavBar />
     </>
   );
 };
+
 export default Projects;

@@ -1,32 +1,25 @@
 import { initializeApp } from "firebase/app";
 
-import { Contributor } from "../models/contributor";
-import { Project } from "../models/project";
-import { Role } from "../models/role";
-import { Task } from "../models/task";
-import { User } from "../models/user";
-import { firebaseConfig } from "./firestoreConfig";
+import { Contributor } from "../src/models/contributor";
+import { Project } from "../src/models/project";
+import { Role } from "../src/models/role";
+import { Task } from "../src/models/task";
+import { User } from "../src/models/user";
+import { firebaseConfig } from "../src/services/firestoreConfig";
 
-import {
-  getFirestore,
-  doc,
-  getDoc,
-  setDoc,
-  runTransaction,
-  TaskState,
-} from "firebase/firestore";
+import { getFirestore, doc, setDoc, runTransaction } from "firebase/firestore";
 
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 
-const addContributor = async (contributor: Contributor, id: string) => {
+const addContributor = async (contributor, id) => {
   await setDoc(doc(db, "contributors", id), {
     ...contributor,
   });
 };
 
-const addProject = async (project: Project) => {
+const addProject = async (project) => {
   const promise = await incrementCollectionId("projects");
   const next_id = promise.valueOf();
   await setDoc(doc(db, "projects", next_id), {
@@ -34,7 +27,7 @@ const addProject = async (project: Project) => {
   });
 };
 
-const addRole = async (role: Role) => {
+const addRole = async (role) => {
   const promise = await incrementCollectionId("roles");
   const next_id = promise.valueOf();
   await setDoc(doc(db, "roles", next_id), {
@@ -42,7 +35,7 @@ const addRole = async (role: Role) => {
   });
 };
 
-const addTask = async (task: Task) => {
+const addTask = async (task) => {
   const promise = await incrementCollectionId("tasks");
   const next_id = promise.valueOf();
   await setDoc(doc(db, "tasks", next_id), {
@@ -50,7 +43,7 @@ const addTask = async (task: Task) => {
   });
 };
 
-const addUser = async (user: User, id: string) => {
+const addUser = async (user, id) => {
   const promise = await incrementCollectionId("users");
   const next_id = promise.valueOf();
   await setDoc(doc(db, "users", next_id), {
@@ -58,9 +51,7 @@ const addUser = async (user: User, id: string) => {
   });
 };
 
-const incrementCollectionId = async (
-  collectionName: string
-): Promise<string> => {
+const incrementCollectionId = async (collectionName) => {
   const counterRef = doc(db, "counter", collectionName);
   const nextId = await runTransaction(db, async (transaction) => {
     const counter = await transaction.get(counterRef);
@@ -70,4 +61,13 @@ const incrementCollectionId = async (
     return next;
   });
   return nextId.toString();
+};
+
+module.exports = {
+  db,
+  addContributor,
+  addProject,
+  addRole,
+  addTask,
+  addUser,
 };
