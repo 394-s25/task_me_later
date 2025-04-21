@@ -151,3 +151,8 @@ export const updateTaskStatus = async (taskId, newStatus) => {
   const taskRef = doc(db, "tasks", taskId);
   await updateDoc(taskRef, { task_status: newStatus });
 };
+
+export const requestHelpForTask = async (taskId) => {
+  const taskRef = doc(db, "tasks", taskId);
+  await updateDoc(taskRef, { help_req: true });
+};

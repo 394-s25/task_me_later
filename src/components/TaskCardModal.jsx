@@ -9,6 +9,10 @@ import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
 import tml_logo_white from "../imgs/tml_logo_white.png";
 import { Chip } from "@mui/material";
+import {
+  updateTaskStatus,
+  requestHelpForTask,
+} from "../services/tasksServices";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -27,6 +31,26 @@ export default function TaskCardModal({
     Math.floor(Math.random() * 16777215)
       .toString(16)
       .padStart(6, "0");
+
+  const markAsCompleted = async () => {
+    try {
+      await updateTaskStatus(task.id, "Completed");
+      setTask((prev) => ({ ...prev, task_status: "Completed" }));
+      onClose();
+    } catch (err) {
+      console.error("Failed to mark task as complete: ", err);
+    }
+  };
+
+  const requestHelp = async () => {
+    try {
+      await requestHelpForTask(task.id);
+      setTask((prev) => ({ ...prev, help_req: true }));
+      onClose();
+    } catch (err) {
+      console.error("Failed to request help for task: ", err);
+    }
+  };
 
   return (
     <>
@@ -116,10 +140,16 @@ export default function TaskCardModal({
             ))}
           </div>
           <div class="flex flex-row justify-center items-center gap-4 mt-5">
-            <Button class="bg-amber-500 text-white rounded-lg text-[15px] px-1 py-0.5 w-[125px]">
+            <Button
+              class="bg-amber-500 text-white rounded-lg text-[15px] px-1 py-0.5 w-[125px]"
+              onClick={requestHelp}
+            >
               Ask For Help
             </Button>
-            <Button class="bg-green-400 text-white rounded-lg text-[15px] px-1 py-0.5 w-[175px]">
+            <Button
+              class="bg-green-400 text-white rounded-lg text-[15px] px-1 py-0.5 w-[175px]"
+              onClick={markAsCompleted}
+            >
               Mark As Complete
             </Button>
           </div>
