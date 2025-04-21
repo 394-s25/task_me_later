@@ -4,6 +4,7 @@ import Profile from "./pages/Profile";
 import Messages from "./pages/Messages";
 import Projects from "./pages/Projects";
 import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
 import { useAuthContext } from "./services/userProvider";
 import { Navigate } from "react-router-dom";
 // import SignUp from "./pages/SignUp";
@@ -18,7 +19,7 @@ const App = () => {
     }
 
     if (!user) {
-      return <Navigate to="/signup" replace />;
+      return <Navigate to="/login" replace />;
     }
 
     return children;
