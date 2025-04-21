@@ -54,6 +54,7 @@ export default function SignUp() {
         aboutMe,
         phoneNumber,
         skills,
+        display_name: user.displayName,
       });
       navigate("/");
     } catch (err) {
