@@ -2,16 +2,23 @@ import * as React from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardActionArea from "@mui/material/CardActionArea";
-import { Button } from "@mui/material";
 import { useState } from "react";
 import Chip from "@mui/material/Chip";
 import ProjectCardModal from "./ProjectCardModal";
-import projectData from "../../mock_data.json";
-import tml_logo_blue from "../imgs/tml_logo_blue.png";
+import { getAllProjects } from "../services/projectService";
 
 export default function ProjectCardPreview() {
   const [open, setOpen] = useState(false);
-  const [selectedProject, setSelectedProject] = useState(-1);
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [projects, setProjects] = useState([]);
+
+  React.useEffect(() => {
+    const fetchProjects = async () => {
+      const data = await getAllProjects();
+      setProjects(data);
+    };
+    fetchProjects();
+  }, []);
 
   const handleCardClick = (project) => {
     setOpen(true);
@@ -28,7 +35,7 @@ export default function ProjectCardPreview() {
     const tasksCompleted = project.tasks_completed || 0;
     const tasksTotal = project.tasks_total || 0;
     const tasksRemaining = tasksTotal - tasksCompleted;
-    
+
     let status = "Completed";
     let chipColor = "lightgreen";
     let textColor = "black";
@@ -70,14 +77,8 @@ export default function ProjectCardPreview() {
     return tasksCompleted === tasksTotal && tasksTotal > 0;
   };
 
-  // Filter projects into current and past
-  const currentProjects = projectData.projects
-    ? projectData.projects.filter((project) => !isProjectCompleted(project))
-    : [];
-
-  const pastProjects = projectData.projects
-    ? projectData.projects.filter((project) => isProjectCompleted(project))
-    : [];
+  const currentProjects = projects.filter((p) => !isProjectCompleted(p));
+  const pastProjects = projects.filter((p) => isProjectCompleted(p));
 
   // Project card component to avoid duplicating code
   const ProjectCard = ({ projectItem }) => (
@@ -120,7 +121,6 @@ export default function ProjectCardPreview() {
   return (
     <>
       <div className="bg-gray-100 rounded-2xl p-4 w-full max-w-4xl mx-auto">
-        {/* Current Projects Section */}
         <h2
           className="text-2xl font-bold mb-4 ml-4"
           style={{ color: "#77A1F3" }}

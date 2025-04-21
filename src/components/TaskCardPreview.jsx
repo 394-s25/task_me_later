@@ -155,11 +155,8 @@ import CardActionArea from "@mui/material/CardActionArea";
 import { Button } from "@mui/material";
 import { useState, useEffect } from "react";
 import TaskCardModal from "./TaskCardModal";
-import taskData2 from "../../mock_data.json";
-import tml_logo_blue from "../imgs/tml_logo_blue.png";
 import Chip from "@mui/material/Chip";
 import ProjectTag from "./ProjectTag";
-import TaskMeLaterBlueLogo from "./TaskMeLaterBlueLogo";
 import { getUsersTasks } from "../services/tasksServices";
 
 export default function TaskCardPreview() {
@@ -238,7 +235,9 @@ export default function TaskCardPreview() {
                 <CardActionArea>
                   <ProjectTag project={taskItem.project_name} />
                   <CardContent>
-                    <h1 className="font-bold mt-[-7px]">{taskItem.task_title}</h1>
+                    <h1 className="font-bold mt-[-7px]">
+                      {taskItem.task_title}
+                    </h1>
                     <h1 className="text-[12px]">Due: {taskItem.due_date}</h1>
                     <hr />
                     <div className="mt-1">
