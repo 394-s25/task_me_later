@@ -7,7 +7,6 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import { useAuthContext } from "./services/userProvider";
 import { Navigate } from "react-router-dom";
-import SignUp from "./pages/SignUp";
 
 const App = () => {
   const PrivateRoute = ({ children }) => {
@@ -60,6 +59,7 @@ const App = () => {
           }
         />
         <Route path="/sign_up" element={<SignUp />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </Router>
   );
