@@ -1,4 +1,4 @@
-import { getDoc, doc, setDoc } from "firebase/firestore";
+import { getDoc, doc, setDoc, getDocs, collection } from "firebase/firestore";
 import { db } from "./firestoreConfig";
 
 export const getUserById = async (userId) => {
@@ -11,4 +11,12 @@ export const createUser = async (user) => {
   await setDoc(userRef, {
     email: user.email,
   });
+};
+
+export const getAllUsers = async () => {
+  const snapshot = await getDocs(collection(db, "users"));
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
 };
