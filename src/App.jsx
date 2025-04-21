@@ -7,8 +7,6 @@ import Login from "./pages/Login";
 //import SignUp from "./pages/SignUp";
 import { useAuthContext } from "./services/userProvider";
 import { Navigate } from "react-router-dom";
-// import SignUp from "./pages/SignUp";
-import SignUp from "./pages/CreateAccount";
 
 const App = () => {
   const PrivateRoute = ({ children }) => {
