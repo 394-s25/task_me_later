@@ -4,7 +4,7 @@ import Profile from "./pages/Profile";
 import Messages from "./pages/Messages";
 import Projects from "./pages/Projects";
 import Login from "./pages/Login";
-import SignUp from "./pages/SignUp";
+//import SignUp from "./pages/SignUp";
 import { useAuthContext } from "./services/userProvider";
 import { Navigate } from "react-router-dom";
 
@@ -17,7 +17,7 @@ const App = () => {
     }
 
     if (!user) {
-      return <Navigate to="/sign_up" replace />;
+      return <Navigate to="/login" replace />;
     }
 
     return children;
@@ -58,8 +58,8 @@ const App = () => {
             </PrivateRoute>
           }
         />
-        <Route path="/sign_up" element={<SignUp />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/create-account" element={<SignUp />} />
+        <Route path="/sign_up" element={<Login />} />
       </Routes>
     </Router>
   );
