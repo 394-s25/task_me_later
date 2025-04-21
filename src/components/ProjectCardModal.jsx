@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import Divider from "@mui/material/Divider";
 import AppBar from "@mui/material/AppBar";
@@ -12,6 +11,7 @@ import Slide from "@mui/material/Slide";
 import { Chip } from "@mui/material";
 import tml_logo_white from "../imgs/tml_logo_white.png";
 import ProjectSignUpCard from "./ProjectSignUpCard";
+import AddTaskForm from "./AddTaskForm";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -217,7 +217,15 @@ export default function ProjectCardModal({
           <Divider className="mt-3" />
 
           {/* Sign Up For Tasks */}
-          <h1 className="font-bold text-xl mt-3">Sign Up For Tasks</h1>
+          <div className="flex justify-start items-center gap-4 mt-3 mb-2">
+            <h1 className="font-bold text-xl">Sign Up For Tasks</h1>
+            <AddTaskForm
+              projectId={project.project_id}
+              onTaskAdded={(task) =>
+                setAvailableTasks((prev) => [...prev, task])
+              }
+            />
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
             {availableTasks && availableTasks.length > 0 ? (
               availableTasks.map((task, index) => (

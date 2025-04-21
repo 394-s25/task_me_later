@@ -1,86 +1,17 @@
-/*import { db } from "./firestoreConfig";
-import { collection, getDocs, getDoc, query, where } from "firebase/firestore";
-
-export const getUsersTasks = async () => {
-    try {
-        const q = query(collection(db, "tasks"), where("help_req", "==", false));
-        const snapshot = await getDocs(q);
-
-        const tasks = await Promise.all(
-        snapshot.docs.map(async (docSnap) => {
-            const taskData = docSnap.data();
-            const projectRef = taskData.parent_project;
-
-            let projectName = "Unknown Project";
-
-            if (projectRef) {
-            const projectSnap = await getDoc(projectRef);
-            if (projectSnap.exists()) {
-                const projectData = projectSnap.data();
-                projectName = projectData.project_name;
-                //console.log("Project Name:", projectName);
-            }
-            }
-
-            return {
-            id: docSnap.id,
-            ...taskData,
-            project_name: projectName,
-            };
-        })
-        );
-
-        return tasks;
-    } catch (error) {
-        console.error("Error fetching user tasks:", error);
-        return [];
-    }
-};
-
-
-export const getSignupTasks = async () => {
-    try {
-        const q = query(collection(db, "tasks"), where("help_req", "==", true));
-        const snapshot = await getDocs(q);
-
-        const tasks = await Promise.all(
-        snapshot.docs.map(async (docSnap) => {
-            const taskData = docSnap.data();
-            const projectRef = taskData.parent_project;
-
-            let projectName = "Unknown Project";
-
-            if (projectRef) {
-            const projectSnap = await getDoc(projectRef);
-            if (projectSnap.exists()) {
-                const projectData = projectSnap.data();
-                projectName = projectData.project_name;
-            }
-            }
-
-            return {
-            id: docSnap.id,
-            ...taskData,
-            project_name: projectName,
-            };
-        })
-        );
-
-        return tasks;
-    } catch (error) {
-        console.error("Error fetching signup tasks:", error);
-        return [];
-    }
-};
-
-*/
-
 import { db } from "./firestoreConfig";
-import { collection, doc, getDoc, updateDoc, query, where, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  updateDoc,
+  query,
+  where,
+  onSnapshot,
+  addDoc,
+} from "firebase/firestore";
 
 export const getUsersTasks = (callback) => {
   try {
-    console.log("Setting up real-time listener for tasks with help_req == false");
     const q = query(collection(db, "tasks"), where("help_req", "==", false));
 
     const unsubscribe = onSnapshot(
@@ -108,8 +39,6 @@ export const getUsersTasks = (callback) => {
             };
           })
         );
-
-        console.log("Real-time user tasks:", tasks);
         callback(tasks);
       },
       (error) => {
@@ -128,7 +57,6 @@ export const getUsersTasks = (callback) => {
 
 export const getSignupTasks = (callback) => {
   try {
-    console.log("Setting up real-time listener for tasks with help_req == true");
     const q = query(collection(db, "tasks"), where("help_req", "==", true));
 
     const unsubscribe = onSnapshot(
@@ -156,8 +84,6 @@ export const getSignupTasks = (callback) => {
             };
           })
         );
-
-        console.log("Real-time signup tasks:", tasks);
         callback(tasks);
       },
       (error) => {
@@ -176,14 +102,30 @@ export const getSignupTasks = (callback) => {
 
 export const signUpForTask = async (taskId) => {
   try {
-    console.log("Updating task:", taskId);
     const taskRef = doc(db, "tasks", taskId);
     await updateDoc(taskRef, {
       help_req: false,
     });
-    console.log("Task updated, help_req set to false");
   } catch (error) {
     console.error("Error signing up for task:", error);
     throw error;
   }
+};
+
+export const addTaskToProject = async (projectId, taskData) => {
+  const parentRef = doc(db, "projects", String(projectId));
+  const newTask = {
+    task_title: taskData.task_title,
+    due_date: taskData.due_date,
+    task_status: "To Do",
+    task_details: taskData.task_details || "",
+    task_score: 0,
+    task_match: 0,
+    task_notes: [],
+    help_req: false,
+    project_dependencies: [],
+    parent_project: parentRef,
+  };
+  const docRef = await addDoc(collection(db, "tasks"), newTask);
+  return docRef.id;
 };
