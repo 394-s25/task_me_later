@@ -4,7 +4,7 @@ import Profile from "./pages/Profile";
 import Messages from "./pages/Messages";
 import Projects from "./pages/Projects";
 import Login from "./pages/Login";
-//import SignUp from "./pages/SignUp";
+import SignUp from "./pages/SignUp";
 import { useAuthContext } from "./services/userProvider";
 import { Navigate } from "react-router-dom";
 
@@ -59,7 +59,7 @@ const App = () => {
           }
         />
         <Route path="/create-account" element={<SignUp />} />
-        <Route path="/sign_up" element={<Login />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </Router>
   );
