@@ -1,7 +1,7 @@
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Card } from "@mui/material";
 import GoogleAuth from "./GoogleAuth";
-import LogoutButton from "./LogoutButton";
+// import LogoutButton from "./LogoutButton";
 import React from "react";
 import { useAuthContext } from "../services/userProvider";
 import { useEffect, useState } from "react";
@@ -36,20 +36,21 @@ export default function ProfileDetails() {
   return (
     <>
       <Card sx={{ marginX: "auto", width: "90%", backgroundColor: "#f8f8f8" }}>
-        <div class="flex flex-row">
-          <div class="max-w-[30%] flex flex-col items-center m-2">
-            <AccountCircleIcon class="size-20" />
-            <div class="text-center">
-              <h1>{user ? user.displayName : "No name"}</h1>
-              <h2 class="break-words w-[50%] ml-[25%]">
-                {user ? user.email : "No email"}
-              </h2>
-              <GoogleAuth />
-              <br />
-              <LogoutButton />
-            </div>
-          </div>
-          <div class="w-[60%] mx-auto m-4">
+        <div class="text-center items-center justify-center flex flex-col mt-5">
+          {user && user.photoURL ? (
+            <img src={user.photoURL} class="rounded-[100%] mb-3 size-22"></img>
+          ) : (
+            <>
+              <AccountCircleIcon class="size-25 mt-[-10px]" />
+            </>
+          )}
+          <h1>{user && user.displayName ? user.displayName : "No name"}</h1>
+          <h2 class="break-words">
+            {user && user.email ? user.email : "No email"}
+          </h2>
+        </div>
+        <div>
+          <div class="w-[90%] mx-auto m-4">
             <div class="relative rounded-lg p-5 items-center mx-auto bg-[#8db1fd] text-white italic text-[20px]">
               <Title title="About Me" />
               <Details details={profile?.aboutMe || "No About Me"} />

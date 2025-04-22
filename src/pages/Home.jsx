@@ -6,8 +6,10 @@ const Home = () => {
   return (
     <>
       <TaskMeLaterBlueLogo />
-      <TaskCardPreview />
-      <TaskSignupPreview />
+      <div class="mt-18">
+        <TaskCardPreview />
+        <TaskSignupPreview />
+      </div>
       <NavBar />
     </>
   );

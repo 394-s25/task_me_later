@@ -6,7 +6,7 @@ import CloseIcon from "@mui/icons-material/Close";
 const ProjectSignUpCard = ({ task, onClick, onSignUp }) => {
   return (
     <div
-      className="bg-white m-2 border rounded-lg bg-white shadow-md cursor-pointer"
+      className="bg-white m-2 border rounded-lg shadow-md cursor-pointer"
       onClick={() => onClick(task)}
     >
       <div className="flex justify-between items-center mb-3">
