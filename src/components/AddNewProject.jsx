@@ -80,11 +80,22 @@ export default function AddNewProject() {
   const handleAddProject = async (e) => {
     e.preventDefault();
     console.log({ projId, projName, projDetails, projDueDate, projMembers });
-
+    await postNewProject({
+      projId: projId,
+      projName: projName,
+      projDetails: projDetails,
+      projDueDate: projDueDate,
+    });
     setProjName("");
     setProjDetails("");
     setProjDueDate("");
     setProjMembers([]);
+    const querySnapshot = await getDocs(collection(db, "projects"));
+    const ids = querySnapshot.docs
+      .map((doc) => parseInt(doc.id))
+      .filter(Number.isInteger);
+    const max = Math.max(...ids);
+    setProjId(max + 1);
   };
 
   const handleChange = (event) => {

@@ -26,30 +26,35 @@ export const postNewProject = async ({
   projDetails,
   projDueDate,
 }) => {
-  const projRef = doc(db, "projects", projId.toString());
-  await setDoc(projRef, {
-    project_id: projId,
-    project_name: projName,
-    details: projDetails,
-    due_date: projDueDate,
-    tasks_completed: 0,
-    tasks_total: 0,
-    team_contributions: [],
-    my_tasks: [],
-    team_tasks: [],
-    available_tasks: [],
-    notes: [
-      {
-        user: "Me",
-        notes: ["Working on setting up database."],
-      },
-      {
-        user: "Taylor",
-        notes: [
-          "I have three color scheme options for the page design, need help deciding.",
-          "Presentation is done!",
-        ],
-      },
-    ],
-  });
+  try {
+    const projRef = doc(db, "projects", projId.toString());
+    await setDoc(projRef, {
+      project_id: projId,
+      project_name: projName,
+      details: projDetails,
+      due_date: projDueDate,
+      tasks_completed: 0,
+      tasks_total: 0,
+      team_contributions: [],
+      my_tasks: [],
+      team_tasks: [],
+      available_tasks: [],
+      notes: [
+        {
+          user: "Me",
+          notes: ["Working on setting up database."],
+        },
+        {
+          user: "Taylor",
+          notes: [
+            "I have three color scheme options for the page design, need help deciding.",
+            "Presentation is done!",
+          ],
+        },
+      ],
+    });
+  } catch (error) {
+    console.error("Error posting new project:", error);
+    throw error;
+  }
 };
