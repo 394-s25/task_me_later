@@ -31,20 +31,25 @@ export default function MyCompletedTasks() {
     >
       <h1 className="font-bold mb-2">My Completed Tasks</h1>
       {completedTasks.length > 0 ? (
-        <ul className="list-disc ml-5">
+        <div className="space-y-2">
           {completedTasks.map((task) => (
-            <li
+            <div
               key={task.id}
-              className="cursor-pointer hover:text-blue-600 transition"
+              className="p-2 bg-white rounded-md shadow-sm border border-gray-200 
+                         flex items-center cursor-pointer 
+                         hover:bg-blue-50 hover:border-blue-300 transition-all"
               onClick={() => {
                 setSelectedTask(task);
                 setOpen(true);
               }}
             >
-              {task.task_title}
-            </li>
+              <div className="flex-grow">
+                <p className="font-medium text-gray-800">{task.task_title}</p>
+              </div>
+              <span className="text-blue-600 text-sm">View details → </span>
+            </div>
           ))}
-        </ul>
+        </div>
       ) : (
         <p className="text-gray-500 italic">No completed tasks yet.</p>
       )}

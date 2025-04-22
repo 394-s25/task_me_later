@@ -52,6 +52,8 @@ export default function TaskCardModal({
     }
   };
 
+  const isCompleted = task.task_status === "Completed";
+
   return (
     <>
       <Dialog
@@ -139,20 +141,31 @@ export default function TaskCardModal({
               </div>
             ))}
           </div>
-          <div class="flex flex-row justify-center items-center gap-4 mt-5">
-            <Button
-              class="bg-amber-500 text-white rounded-lg text-[15px] px-1 py-0.5 w-[125px]"
-              onClick={requestHelp}
-            >
-              Ask For Help
-            </Button>
-            <Button
-              class="bg-green-400 text-white rounded-lg text-[15px] px-1 py-0.5 w-[175px]"
-              onClick={markAsCompleted}
-            >
-              Mark As Complete
-            </Button>
-          </div>
+
+          {!isCompleted && (
+            <div className="flex flex-row justify-center items-center gap-4 mt-5">
+              <Button
+                className="bg-amber-500 text-white rounded-lg text-[15px] px-1 py-0.5 w-[125px]"
+                onClick={requestHelp}
+              >
+                Ask For Help
+              </Button>
+              <Button
+                className="bg-green-400 text-white rounded-lg text-[15px] px-1 py-0.5 w-[175px]"
+                onClick={markAsCompleted}
+              >
+                Mark As Complete
+              </Button>
+            </div>
+          )}
+
+          {isCompleted && (
+            <div className="text-center mt-5 mb-3 p-3 bg-green-100 rounded-lg">
+              <p className="text-green-700 font-medium">
+                ✓ This task has been completed
+              </p>
+            </div>
+          )}
         </div>
       </Dialog>
     </>
