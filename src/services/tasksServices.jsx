@@ -11,6 +11,7 @@ import {
   getDocs,
   increment,
   runTransaction,
+  deleteDoc,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
@@ -205,4 +206,9 @@ export const getTasksByProjectId = async (projectId, currentUserId) => {
     console.error("Error fetching tasks by project: ", err);
     return { mine: [], assigned: [], available: [] };
   }
+};
+
+export const deleteTask = async (taskId) => {
+  const taskRef = doc(db, "tasks", taskId);
+  await deleteDoc(taskRef);
 };

@@ -15,7 +15,6 @@ import { addTaskToProject } from "../services/tasksServices";
 const statuses = ["To Do", "In Progress", "Completed"];
 
 export default function AddTaskForm({ projectId, onTaskAdded }) {
-  console.log(`Project ID: ${projectId}`);
   const [open, setOpen] = useState(false);
 
   const [title, setTitle] = useState("");
@@ -47,7 +46,7 @@ export default function AddTaskForm({ projectId, onTaskAdded }) {
     };
     try {
       await addTaskToProject(projectId, taskData);
-      if (onTaskAdded) onTaskAdded(taskData);
+      if (onTaskAdded) onTaskAdded();
       setOpen(false);
     } catch (err) {
       console.error("Error adding task:", err);
