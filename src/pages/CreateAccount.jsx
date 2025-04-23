@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -12,7 +12,7 @@ import Button from "@mui/material/Button";
 import { SkillsForSignUpPage } from "../components/SkillsForSignUpPage";
 import { db } from "../services/firestoreConfig";
 import { doc, updateDoc } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { getAuth, updateProfile } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
 const ITEM_HEIGHT = 48;
@@ -35,11 +35,19 @@ function getStyles(name, selectedSkills, theme) {
 }
 
 export default function SignUp() {
+  const [displayName, setDisplayName] = useState("");
   const [aboutMe, setAboutMe] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [skills, setSkills] = useState([]);
   const theme = useTheme();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const user = getAuth().currentUser;
+    if (user?.displayName) {
+      setDisplayName(user.displayName);
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -54,8 +62,11 @@ export default function SignUp() {
         aboutMe,
         phoneNumber,
         skills,
-        display_name: user.displayName,
+        display_name: displayName || user.displayName || "",
       });
+      if (!user.displayName && displayName) {
+        await updateProfile(user, { displayName });
+      }
       navigate("/");
     } catch (err) {
       console.error("Error submitting form:", err);
@@ -64,6 +75,15 @@ export default function SignUp() {
 
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ p: 4 }}>
+      <TextField
+        label="Display Name"
+        variant="outlined"
+        fullWidth
+        margin="normal"
+        required
+        value={displayName}
+        onChange={(e) => setDisplayName(e.target.value)}
+      />
       <TextField
         label="About Me"
         variant="outlined"
