@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -9,14 +9,17 @@ import Select from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import { Alert, Snackbar } from "@mui/material";
 import { SkillsForSignUpPage } from "../components/SkillsForSignUpPage";
 import { db } from "../services/firestoreConfig";
-import { doc, updateDoc } from "firebase/firestore";
-import { getAuth, updateProfile } from "firebase/auth";
+import { doc, updateDoc, deleteDoc } from "firebase/firestore";
+import { getAuth, updateProfile, deleteUser } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
+const TIMEOUT_DURATION = 5 * 60 * 1000;
+const WARNING_DURATION = 30 * 1000;
 const MenuProps = {
   PaperProps: {
     style: {
@@ -39,8 +42,62 @@ export default function SignUp() {
   const [aboutMe, setAboutMe] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [skills, setSkills] = useState([]);
+  const [showWarning, setShowWarning] = useState(false);
   const theme = useTheme();
   const navigate = useNavigate();
+  const timeoutRef = useRef(null);
+  const warningRef = useRef(null);
+
+  useEffect(() => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (user) {
+      warningRef.current = setTimeout(() => {
+        setShowWarning(true);
+      }, TIMEOUT_DURATION - WARNING_DURATION);
+
+      timeoutRef.current = setTimeout(async () => {
+        try {
+          const userRef = doc(db, "users", user.uid);
+          await deleteDoc(userRef);
+          await deleteUser(user);
+          navigate("/sign_up");
+        } catch (err) {
+          console.error("Error deleting incomplete account: ", err);
+          navigate("/sign_up");
+        }
+      }, TIMEOUT_DURATION);
+    }
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      if (warningRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
+  const extendSession = () => {
+    setShowWarning(false);
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    if (warningRef.current) clearTimeout(timeoutRef.current);
+
+    warningRef.current = setTimeout(() => {
+      setShowWarning(true);
+    }, TIMEOUT_DURATION - WARNING_DURATION);
+
+    timeoutRef.current = setTimeout(async () => {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      try {
+        const userRef = doc(db, "users", user.uid);
+        await deleteDoc(userRef);
+        await deleteUser(user);
+        navigate("/sign_up");
+      } catch (err) {
+        console.error("Error deleting incomplete account: ", err);
+        navigate("/sign_up");
+      }
+    }, TIMEOUT_DURATION);
+  };
 
   useEffect(() => {
     const user = getAuth().currentUser;
@@ -67,6 +124,8 @@ export default function SignUp() {
       if (!user.displayName && displayName) {
         await updateProfile(user, { displayName });
       }
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      if (warningRef.current) clearTimeout(warningRef.current);
       navigate("/");
     } catch (err) {
       console.error("Error submitting form:", err);
@@ -139,6 +198,22 @@ export default function SignUp() {
       <Button variant="contained" type="submit" sx={{ mt: 3 }}>
         Sign Up
       </Button>
+      <Snackbar
+        open={showWarning}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          severity="warning"
+          sx={{ width: "100%" }}
+          action={
+            <Button color="inherit" size="small" onClick={extendSession}>
+              I'm here
+            </Button>
+          }
+        >
+          Are you still there? Your progress will be lost in 30 seconds.
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }
