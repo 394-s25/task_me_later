@@ -107,11 +107,17 @@ export default function TaskCardModal({
         <div class="text-center mt-2 mb-3">
           <h1 class="text-[40px] font-bold">{task.task_title}</h1>
           <h2 class="text-[20px] mt-[-5px]">
-            <b>{task.projectName || "Unknown project"}</b>
+            <b>{task.project_name || "Unknown project"}</b>
           </h2>
         </div>
         <div class="w-[90%] mx-auto">
           <div class="relative border-1 rounded-lg p-5 items-center mx-auto mb-4 border-gray-200 bg-[#8db1fd] text-white italic text-[20px]">
+            <h2>
+              Assigned To:{" "}
+              {task.assigned_to
+                ? task.assigned_name || task.assigned_to
+                : "Unassigned"}
+            </h2>
             <h2>Due: {task.due_date}</h2>
             <h2>Status: {task.task_status}</h2>
             <h2>Task Score: {task.task_score}/100</h2>
