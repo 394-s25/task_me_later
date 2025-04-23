@@ -12,6 +12,9 @@ import { Chip } from "@mui/material";
 import tml_logo_white from "../imgs/tml_logo_white.png";
 import ProjectSignUpCard from "./ProjectSignUpCard";
 import AddTaskForm from "./AddTaskForm";
+import { getTasksByProjectId, signUpForTask } from "../services/tasksServices";
+import { getAuth } from "firebase/auth";
+import TaskCardModal from "./TaskCardModal";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -23,34 +26,42 @@ export default function ProjectCardModal({
   onClose,
   setProject,
 }) {
-  if (!project) return null;
-
   const [availableTasks, setAvailableTasks] = useState([]);
-  const [signedUpTasks, setSignedUpTasks] = useState([]);
+  const [myTasks, setMyTasks] = useState([]);
+  const [otherTasks, setOtherTasks] = useState([]);
 
-  // Use an effect to update availableTasks when project changes
+  const [openTaskModal, setOpenTaskModal] = useState(false);
+  const [selectedCard, setSelectedCard] = useState(null);
+
+  const user = getAuth().currentUser;
+
   useEffect(() => {
-    if (project && project.available_tasks) {
-      setAvailableTasks([...project.available_tasks]);
-    } else {
-      setAvailableTasks([]);
-    }
+    if (!project || !user) return;
+
+    const loadTasks = async () => {
+      const { mine, assigned, available } = await getTasksByProjectId(
+        project.project_id,
+        user.uid
+      );
+      setMyTasks(mine);
+      setAvailableTasks(available);
+      setOtherTasks(assigned);
+    };
+
+    loadTasks();
   }, [project]);
 
   const handleTaskClick = (task) => {
-    console.log("Task clicked:", task);
+    setSelectedCard(task);
+    setOpenTaskModal(true);
   };
 
   const handleSignUp = (task) => {
-    // Add the task to signedUpTasks
-    setSignedUpTasks([...signedUpTasks, task]);
-
-    // Remove the task from availableTasks by filtering out the task with the same task_title
+    setMyTasks([...myTasks, task]);
     setAvailableTasks(
       availableTasks.filter((t) => t.task_title !== task.task_title)
     );
-
-    console.log(`Signed up for task: ${task.task_title}`);
+    signUpForTask(task.id);
   };
 
   // Calculate progress percentage
@@ -83,6 +94,8 @@ export default function ProjectCardModal({
         return "gray";
     }
   };
+
+  if (!project) return null;
 
   return (
     <>
@@ -161,18 +174,19 @@ export default function ProjectCardModal({
           {/* My Tasks */}
           <h1 className="font-bold text-xl">My Tasks</h1>
           <div className="flex flex-wrap gap-2 mt-2">
-            {project.my_tasks && project.my_tasks.length > 0 ? (
-              project.my_tasks.map((task, index) => (
+            {myTasks.length > 0 ? (
+              myTasks.map((task, index) => (
                 <Chip
-                  key={index}
-                  label={task.name}
+                  key={task.id || index}
+                  label={task.task_title}
                   size="medium"
                   sx={{
-                    backgroundColor: getTaskStatusColor(task.status),
+                    backgroundColor: getTaskStatusColor(task.task_status),
                     color: "white",
                     fontSize: "14px",
                     padding: "20px 10px",
                   }}
+                  onClick={() => handleTaskClick(task)}
                 />
               ))
             ) : (
@@ -183,29 +197,28 @@ export default function ProjectCardModal({
           </div>
 
           {/* Team Member Tasks */}
-          {project.team_tasks && project.team_tasks.length > 0 ? (
-            project.team_tasks.map((memberTasks, index) => (
-              <div key={index} className="w-full mt-3">
-                <h1 className="font-bold text-xl">
-                  {memberTasks.name}'s Tasks
-                </h1>
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {memberTasks.tasks.map((task, taskIndex) => (
-                    <Chip
-                      key={taskIndex}
-                      label={task.name}
-                      size="medium"
-                      sx={{
-                        backgroundColor: getTaskStatusColor(task.status),
-                        color: "white",
-                        fontSize: "14px",
-                        padding: "20px 10px",
-                      }}
-                    />
-                  ))}
-                </div>
+          {otherTasks.length > 0 ? (
+            <>
+              <h1 className="font-bold text-xl mt-3">
+                Tasks Assigned to Other Members
+              </h1>
+              <div className="flex flex-wrap gap-2 mt-2">
+                {otherTasks.map((task, index) => (
+                  <Chip
+                    key={task.id || index}
+                    label={task.task_title}
+                    size="medium"
+                    sx={{
+                      backgroundColor: getTaskStatusColor(task.task_status),
+                      color: "white",
+                      fontSize: "14px",
+                      padding: "20px 10px",
+                    }}
+                    onClick={() => handleTaskClick(task)}
+                  />
+                ))}
               </div>
-            ))
+            </>
           ) : (
             <div className="mt-3">
               <p className="text-gray-500 italic">
@@ -247,22 +260,6 @@ export default function ProjectCardModal({
             )}
           </div>
 
-          {/* Signed Up Tasks Section */}
-          {/* {signedUpTasks.length > 0 && (
-            <>
-              <Divider className="mt-3" />
-              <h1 className="font-bold text-xl mt-3">Your Signed Up Tasks</h1>
-              <ul className="bg-white rounded-lg shadow-md p-4 mt-2">
-                {signedUpTasks.map((task, index) => (
-                  <li key={index} className="py-2 border-b last:border-0">
-                    <span className="font-medium">{task.task_title}</span> -
-                    Due: {task.due_date}
-                  </li>
-                ))}
-              </ul>
-            </>
-          )} */}
-
           <Divider className="mt-3" />
 
           {/* Notes */}
@@ -291,6 +288,13 @@ export default function ProjectCardModal({
           </div>
         </div>
       </Dialog>
+      <TaskCardModal
+        task={selectedCard}
+        open={openTaskModal}
+        onClose={() => setOpenTaskModal(false)}
+        setTask={setSelectedCard}
+        allTasks={[...myTasks, ...otherTasks, ...availableTasks]}
+      />
     </>
   );
 }

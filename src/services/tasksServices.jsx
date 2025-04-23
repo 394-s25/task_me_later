@@ -8,6 +8,7 @@ import {
   where,
   onSnapshot,
   addDoc,
+  getDocs,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
@@ -155,4 +156,37 @@ export const updateTaskStatus = async (taskId, newStatus) => {
 export const requestHelpForTask = async (taskId) => {
   const taskRef = doc(db, "tasks", taskId);
   await updateDoc(taskRef, { help_req: true });
+};
+
+export const getTasksByProjectId = async (projectId, currentUserId) => {
+  try {
+    const projectRef = doc(db, "projects", String(projectId));
+    const q = query(
+      collection(db, "tasks"),
+      where("parent_project", "==", projectRef)
+    );
+    const snapshot = await getDocs(q);
+
+    const assigned = [];
+    const available = [];
+    const mine = [];
+
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      const task = { id: doc.id, ...data };
+
+      if (data.assigned_to === currentUserId) {
+        mine.push(task);
+      } else if (data.assigned_to) {
+        assigned.push(task);
+      } else {
+        available.push(task);
+      }
+    });
+
+    return { mine, assigned, available };
+  } catch (err) {
+    console.error("Error fetching tasks by project: ", err);
+    return { mine: [], assigned: [], available: [] };
+  }
 };
