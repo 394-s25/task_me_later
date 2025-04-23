@@ -14,7 +14,7 @@ import ProjectSignUpCard from "./ProjectSignUpCard";
 import AddTaskForm from "./AddTaskForm";
 import { getTasksByProjectId, signUpForTask } from "../services/tasksServices";
 import { getAuth } from "firebase/auth";
-import { getProjectById } from "../services/projectService";
+import TaskCardModal from "./TaskCardModal";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -29,6 +29,9 @@ export default function ProjectCardModal({
   const [availableTasks, setAvailableTasks] = useState([]);
   const [myTasks, setMyTasks] = useState([]);
   const [otherTasks, setOtherTasks] = useState([]);
+
+  const [openTaskModal, setOpenTaskModal] = useState(false);
+  const [selectedCard, setSelectedCard] = useState(null);
 
   const user = getAuth().currentUser;
 
@@ -49,7 +52,8 @@ export default function ProjectCardModal({
   }, [project]);
 
   const handleTaskClick = (task) => {
-    console.log("Task clicked:", task);
+    setSelectedCard(task);
+    setOpenTaskModal(true);
   };
 
   const handleSignUp = (task) => {
@@ -173,7 +177,7 @@ export default function ProjectCardModal({
             {myTasks.length > 0 ? (
               myTasks.map((task, index) => (
                 <Chip
-                  key={index}
+                  key={task.id || index}
                   label={task.task_title}
                   size="medium"
                   sx={{
@@ -182,6 +186,7 @@ export default function ProjectCardModal({
                     fontSize: "14px",
                     padding: "20px 10px",
                   }}
+                  onClick={() => handleTaskClick(task)}
                 />
               ))
             ) : (
@@ -209,6 +214,7 @@ export default function ProjectCardModal({
                       fontSize: "14px",
                       padding: "20px 10px",
                     }}
+                    onClick={() => handleTaskClick(task)}
                   />
                 ))}
               </div>
@@ -254,22 +260,6 @@ export default function ProjectCardModal({
             )}
           </div>
 
-          {/* Signed Up Tasks Section */}
-          {/* {signedUpTasks.length > 0 && (
-            <>
-              <Divider className="mt-3" />
-              <h1 className="font-bold text-xl mt-3">Your Signed Up Tasks</h1>
-              <ul className="bg-white rounded-lg shadow-md p-4 mt-2">
-                {signedUpTasks.map((task, index) => (
-                  <li key={index} className="py-2 border-b last:border-0">
-                    <span className="font-medium">{task.task_title}</span> -
-                    Due: {task.due_date}
-                  </li>
-                ))}
-              </ul>
-            </>
-          )} */}
-
           <Divider className="mt-3" />
 
           {/* Notes */}
@@ -298,6 +288,13 @@ export default function ProjectCardModal({
           </div>
         </div>
       </Dialog>
+      <TaskCardModal
+        task={selectedCard}
+        open={openTaskModal}
+        onClose={() => setOpenTaskModal(false)}
+        setTask={setSelectedCard}
+        allTasks={[...myTasks, ...otherTasks, ...availableTasks]}
+      />
     </>
   );
 }
