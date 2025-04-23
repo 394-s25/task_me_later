@@ -44,7 +44,7 @@ export default function ProjectCardPreview() {
       status = "Not Started";
       chipColor = "red";
       textColor = "white";
-    } else if (tasksRemaining > 0) {
+    } else if (tasksRemaining > 0 || !project?.completed) {
       status = "In Progress";
       chipColor = "orange";
       textColor = "black";
@@ -70,11 +70,8 @@ export default function ProjectCardPreview() {
     return (tasksCompleted / tasksTotal) * 100;
   };
 
-  // Function to determine if a project is completed
   const isProjectCompleted = (project) => {
-    const tasksCompleted = project.tasks_completed || 0;
-    const tasksTotal = project.tasks_total || 0;
-    return tasksCompleted === tasksTotal && tasksTotal > 0;
+    return project.completed || false;
   };
 
   const currentProjects = projects.filter((p) => !isProjectCompleted(p));
