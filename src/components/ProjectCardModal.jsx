@@ -37,19 +37,18 @@ export default function ProjectCardModal({
 
   const user = getAuth().currentUser;
 
+  const loadTasks = async () => {
+    const { mine, assigned, available } = await getTasksByProjectId(
+      project.project_id,
+      user.uid
+    );
+    setMyTasks(mine);
+    setAvailableTasks(available);
+    setOtherTasks(assigned);
+  };
+
   useEffect(() => {
     if (!project || !user) return;
-
-    const loadTasks = async () => {
-      const { mine, assigned, available } = await getTasksByProjectId(
-        project.project_id,
-        user.uid
-      );
-      setMyTasks(mine);
-      setAvailableTasks(available);
-      setOtherTasks(assigned);
-    };
-
     loadTasks();
   }, [project]);
 
@@ -246,9 +245,7 @@ export default function ProjectCardModal({
             <h1 className="font-bold text-xl">Sign Up For Tasks</h1>
             <AddTaskForm
               projectId={project.project_id}
-              onTaskAdded={(task) =>
-                setAvailableTasks((prev) => [...prev, task])
-              }
+              onTaskAdded={() => loadTasks()}
             />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
@@ -323,6 +320,7 @@ export default function ProjectCardModal({
         onClose={() => setOpenTaskModal(false)}
         setTask={setSelectedCard}
         allTasks={[...myTasks, ...otherTasks, ...availableTasks]}
+        onTaskDeleted={() => loadTasks()}
       />
     </>
   );
