@@ -8,13 +8,14 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
-import { Chip } from "@mui/material";
+import { Button, Chip } from "@mui/material";
 import tml_logo_white from "../imgs/tml_logo_white.png";
 import ProjectSignUpCard from "./ProjectSignUpCard";
 import AddTaskForm from "./AddTaskForm";
 import { getTasksByProjectId, signUpForTask } from "../services/tasksServices";
 import { getAuth } from "firebase/auth";
 import TaskCardModal from "./TaskCardModal";
+import { markProjectAsComplete } from "../services/projectService";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -25,6 +26,7 @@ export default function ProjectCardModal({
   open,
   onClose,
   setProject,
+  onProjectUpdated,
 }) {
   const [availableTasks, setAvailableTasks] = useState([]);
   const [myTasks, setMyTasks] = useState([]);
@@ -62,6 +64,16 @@ export default function ProjectCardModal({
       availableTasks.filter((t) => t.task_title !== task.task_title)
     );
     signUpForTask(task.id);
+  };
+
+  const handleMarkCompleted = async (project_id) => {
+    try {
+      await markProjectAsComplete(project_id);
+      if (onProjectUpdated) onProjectUpdated();
+      onClose();
+    } catch (err) {
+      console.error("Error marking project as complete: ", err);
+    }
   };
 
   // Calculate progress percentage
@@ -286,6 +298,23 @@ export default function ProjectCardModal({
               </p>
             )}
           </div>
+          {!project.completed ? (
+            <>
+              <Divider className="mt-6 mb-4" />
+              <div className="text-center mt-6 mb-6">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  disabled={
+                    !project || project.tasks_completed < project.tasks_total
+                  }
+                  onClick={async () => handleMarkCompleted(project.project_id)}
+                >
+                  Mark Project as Complete
+                </Button>
+              </div>
+            </>
+          ) : null}
         </div>
       </Dialog>
       <TaskCardModal

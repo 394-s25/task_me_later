@@ -1,4 +1,11 @@
-import { doc, getDoc, getDocs, setDoc, collection } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+  collection,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "./firestoreConfig";
 
 export const getProjectById = async (projectId) => {
@@ -60,4 +67,11 @@ export const getAllProjects = async () => {
     project_id: doc.id,
     ...doc.data(),
   }));
+};
+
+export const markProjectAsComplete = async (projectId) => {
+  const projectRef = doc(db, "projects", String(projectId));
+  await updateDoc(projectRef, {
+    completed: true,
+  });
 };
