@@ -39,9 +39,9 @@ export const getUsersTasks = (callback) => {
           snapshot.docs.map(async (docSnap) => {
             const taskData = docSnap.data();
             const projectRef = taskData.parent_project;
+            const userRef = doc(db, "users", taskData.assigned_to);
 
             let projectName = "Unknown Project";
-
             if (projectRef) {
               const projectSnap = await getDoc(projectRef);
               if (projectSnap.exists()) {
@@ -50,10 +50,20 @@ export const getUsersTasks = (callback) => {
               }
             }
 
+            let assignedName = "Unassigned";
+            if (userRef) {
+              const userSnap = await getDoc(userRef);
+              if (userSnap.exists()) {
+                const userData = userSnap.data();
+                assignedName = userData.display_name;
+              }
+            }
+
             return {
               id: docSnap.id,
               ...taskData,
               project_name: projectName,
+              assigned_name: assignedName,
             };
           })
         );
@@ -188,9 +198,18 @@ export const getTasksByProjectId = async (projectId, currentUserId) => {
     const available = [];
     const mine = [];
 
-    snapshot.forEach((doc) => {
-      const data = doc.data();
-      const task = { id: doc.id, ...data };
+    const taskPromises = snapshot.docs.map(async (taskDoc) => {
+      const data = taskDoc.data();
+      let assignedName = "Unassigned";
+      if (data.assigned_to) {
+        const userRef = doc(db, "users", data.assigned_to);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+          assignedName = userSnap.data().display_name;
+        }
+      }
+
+      const task = { id: taskDoc.id, assigned_name: assignedName, ...data };
 
       if (data.assigned_to === currentUserId) {
         mine.push(task);
@@ -200,6 +219,8 @@ export const getTasksByProjectId = async (projectId, currentUserId) => {
         available.push(task);
       }
     });
+
+    await Promise.all(taskPromises);
 
     return { mine, assigned, available };
   } catch (err) {
