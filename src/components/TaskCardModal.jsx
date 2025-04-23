@@ -8,10 +8,17 @@ import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
 import tml_logo_white from "../imgs/tml_logo_white.png";
-import { Chip } from "@mui/material";
+import {
+  Chip,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
 import {
   updateTaskStatus,
   requestHelpForTask,
+  deleteTask,
 } from "../services/tasksServices";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -24,8 +31,12 @@ export default function TaskCardModal({
   onClose,
   setTask,
   allTasks,
+  onTaskDeleted,
 }) {
+  const [confirmOpen, setConfirmOpen] = React.useState(false);
+
   if (!task) return null;
+
   const getRandomHexColor = () =>
     "#" +
     Math.floor(Math.random() * 16777215)
@@ -49,6 +60,17 @@ export default function TaskCardModal({
       onClose();
     } catch (err) {
       console.error("Failed to request help for task: ", err);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await deleteTask(task.id);
+      setConfirmOpen(false);
+      if (onTaskDeleted) onTaskDeleted(task.id);
+      onClose();
+    } catch (err) {
+      console.error("Failed to delete task: ", err);
     }
   };
 
@@ -156,6 +178,13 @@ export default function TaskCardModal({
               >
                 Mark As Complete
               </Button>
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={() => setConfirmOpen(true)}
+              >
+                Delete Task
+              </Button>
             </div>
           )}
 
@@ -167,6 +196,25 @@ export default function TaskCardModal({
             </div>
           )}
         </div>
+      </Dialog>
+      <Dialog
+        open={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        aria-labelledby="confirm-delete-title"
+      >
+        <DialogTitle id="confirm-delete-title">Confirm Delete</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this task? This action cannot be
+            undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmOpen(false)}>Cancel</Button>
+          <Button onClick={handleDelete} color="error">
+            Delete
+          </Button>
+        </DialogActions>
       </Dialog>
     </>
   );
