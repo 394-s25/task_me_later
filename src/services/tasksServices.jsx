@@ -9,6 +9,8 @@ import {
   onSnapshot,
   addDoc,
   getDocs,
+  increment,
+  runTransaction,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
@@ -145,12 +147,26 @@ export const addTaskToProject = async (projectId, taskData) => {
     parent_project: parentRef,
   };
   const docRef = await addDoc(collection(db, "tasks"), newTask);
+  await updateDoc(parentRef, {
+    tasks_total: increment(1),
+  });
   return docRef.id;
 };
 
 export const updateTaskStatus = async (taskId, newStatus) => {
   const taskRef = doc(db, "tasks", taskId);
-  await updateDoc(taskRef, { task_status: newStatus });
+  await runTransaction(db, async (transaction) => {
+    const taskDoc = await transaction.get(taskRef);
+    if (!taskDoc.exists()) throw new Error("Task does not exist");
+    const oldStatus = taskDoc.data().task_status;
+    const parentRef = taskDoc.data().parent_project;
+    transaction.update(taskRef, { task_status: newStatus });
+    if (oldStatus !== "Completed" && newStatus === "Completed") {
+      transaction.update(parentRef, { tasks_completed: increment(1) });
+    } else if (oldStatus === "Completed" && newStatus !== "Completed") {
+      transaction.update(parentRef, { tasks_completed: increment(-1) });
+    }
+  });
 };
 
 export const requestHelpForTask = async (taskId) => {
