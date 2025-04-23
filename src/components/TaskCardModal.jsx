@@ -20,6 +20,9 @@ import {
   requestHelpForTask,
   deleteTask,
 } from "../services/tasksServices";
+import { useNavigate } from "react-router-dom";
+import { getAuth } from "firebase/auth";
+import { getOrCreateConversation } from "../services/messagesService";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -33,6 +36,8 @@ export default function TaskCardModal({
   allTasks,
   onTaskDeleted,
 }) {
+  const navigate = useNavigate();
+  const currentUserId = getAuth().currentUser?.uid;
   const [confirmOpen, setConfirmOpen] = React.useState(false);
 
   if (!task) return null;
@@ -113,10 +118,35 @@ export default function TaskCardModal({
         <div class="w-[90%] mx-auto">
           <div class="relative border-1 rounded-lg p-5 items-center mx-auto mb-4 border-gray-200 bg-[#8db1fd] text-white italic text-[20px]">
             <h2>
-              Assigned To:{" "}
-              {task.assigned_to
-                ? task.assigned_name || task.assigned_to
-                : "Unassigned"}
+              <div>
+                <h1 className="font-bold">
+                  Assigned To
+                  {task.assigned_name &&
+                  task.assigned_name !== "Unassigned" &&
+                  task.assigned_to !== currentUserId ? (
+                    <span
+                      onClick={async () => {
+                        const conversationId = await getOrCreateConversation(
+                          currentUserId,
+                          task.assigned_to
+                        );
+                        navigate(`/chat/${conversationId}`, {
+                          state: {
+                            displayName: task.assigned_name,
+                          },
+                        });
+                      }}
+                      className="text-blue-600 cursor-pointer underline ml-2"
+                    >
+                      {task.assigned_name}
+                    </span>
+                  ) : (
+                    <span className="ml-2">
+                      {task.assigned_name || "Unassigned"}
+                    </span>
+                  )}
+                </h1>
+              </div>
             </h2>
             <h2>Due: {task.due_date}</h2>
             <h2>Status: {task.task_status}</h2>
