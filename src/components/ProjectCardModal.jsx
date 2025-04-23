@@ -298,20 +298,23 @@ export default function ProjectCardModal({
               </p>
             )}
           </div>
-
-          <Divider className="mt-6 mb-4" />
-          <div className="text-center mt-6 mb-6">
-            <Button
-              variant="contained"
-              color="primary"
-              disabled={
-                !project || project.tasks_completed < project.tasks_total
-              }
-              onClick={async () => handleMarkCompleted(project.project_id)}
-            >
-              Mark Project as Complete
-            </Button>
-          </div>
+          {!project.completed ? (
+            <>
+              <Divider className="mt-6 mb-4" />
+              <div className="text-center mt-6 mb-6">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  disabled={
+                    !project || project.tasks_completed < project.tasks_total
+                  }
+                  onClick={async () => handleMarkCompleted(project.project_id)}
+                >
+                  Mark Project as Complete
+                </Button>
+              </div>
+            </>
+          ) : null}
         </div>
       </Dialog>
       <TaskCardModal
