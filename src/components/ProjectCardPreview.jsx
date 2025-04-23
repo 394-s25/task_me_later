@@ -12,11 +12,12 @@ export default function ProjectCardPreview() {
   const [selectedProject, setSelectedProject] = useState(null);
   const [projects, setProjects] = useState([]);
 
+  const fetchProjects = async () => {
+    const data = await getAllProjects();
+    setProjects(data);
+  };
+
   React.useEffect(() => {
-    const fetchProjects = async () => {
-      const data = await getAllProjects();
-      setProjects(data);
-    };
     fetchProjects();
   }, []);
 
@@ -175,6 +176,7 @@ export default function ProjectCardPreview() {
         open={open}
         onClose={handleDialogClose}
         setProject={setSelectedProject}
+        onProjectUpdated={fetchProjects}
       />
     </>
   );

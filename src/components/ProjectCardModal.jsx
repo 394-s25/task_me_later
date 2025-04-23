@@ -26,6 +26,7 @@ export default function ProjectCardModal({
   open,
   onClose,
   setProject,
+  onProjectUpdated,
 }) {
   const [availableTasks, setAvailableTasks] = useState([]);
   const [myTasks, setMyTasks] = useState([]);
@@ -68,7 +69,7 @@ export default function ProjectCardModal({
   const handleMarkCompleted = async (project_id) => {
     try {
       await markProjectAsComplete(project_id);
-      alert("Project marked as complete");
+      if (onProjectUpdated) onProjectUpdated();
       onClose();
     } catch (err) {
       console.error("Error marking project as complete: ", err);
