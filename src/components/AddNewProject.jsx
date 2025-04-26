@@ -24,7 +24,7 @@ export default function AddNewProject({ onComplete }) {
   const [projMembers, setProjMembers] = useState([]);
   const [people, setPeople] = useState([]);
   const theme = useTheme();
-
+  
   useEffect(() => {
     const fetchMaxID = async () => {
       try {
@@ -34,7 +34,7 @@ export default function AddNewProject({ onComplete }) {
           .filter(Number.isInteger);
         const max = ids.length ? Math.max(...ids) : 0;
         setProjId(max + 1);
-
+        
         const users = await getAllUsers();
         setPeople(
           users.map((user) => ({ id: user.id, name: user.display_name }))

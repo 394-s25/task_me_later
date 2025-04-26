@@ -8,14 +8,29 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
-import { Button, Chip } from "@mui/material";
+import {
+  Button,
+  Chip,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
 import tml_logo_white from "../imgs/tml_logo_white.png";
 import ProjectSignUpCard from "./ProjectSignUpCard";
 import AddTaskForm from "./AddTaskForm";
 import { getTasksByProjectId, signUpForTask } from "../services/tasksServices";
 import { getAuth } from "firebase/auth";
 import TaskCardModal from "./TaskCardModal";
-import { markProjectAsComplete } from "../services/projectService";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { db } from "../services/firestoreConfig";
+import { getDoc, doc, updateDoc } from "firebase/firestore";
+import {
+  markProjectAsComplete,
+  deleteProjectForMe,
+  deleteProjectForEveryone,
+} from "../services/projectService";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -34,6 +49,12 @@ export default function ProjectCardModal({
 
   const [openTaskModal, setOpenTaskModal] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
+
+  const [newProjectNoteText, setNewProjectNoteText] = useState("");
+  const [editingProjectNoteIndex, setEditingProjectNoteIndex] = useState(-1);
+  const [editingProjectNoteText, setEditingProjectNoteText] = useState("");
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const user = getAuth().currentUser;
 
@@ -72,6 +93,116 @@ export default function ProjectCardModal({
       onClose();
     } catch (err) {
       console.error("Error marking project as complete: ", err);
+    }
+  };
+
+  const handleAddProjectNote = async () => {
+    try {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      let displayName = user.displayName;
+
+      if (!displayName) {
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+          displayName = userSnap.data().display_name || "Unknown";
+        } else {
+          displayName = "Unknown";
+        }
+      }
+
+      const note = {
+        user: displayName,
+        userId: user.uid,
+        details: newProjectNoteText.trim(),
+        timestamp: new Date().toISOString(),
+      };
+
+      const updatedNotes = [...(project.notes || []), note];
+
+      await updateDoc(doc(db, "projects", String(project.project_id)), {
+        notes: updatedNotes,
+      });
+
+      setProject((prev) => ({
+        ...prev,
+        notes: updatedNotes,
+      }));
+
+      setNewProjectNoteText("");
+    } catch (err) {
+      console.error("Failed to add project note: ", err);
+    }
+  };
+
+  const handleSaveEditedProjectNote = async (index) => {
+    try {
+      const updatedNotes = [...(project.notes || [])];
+      updatedNotes[index] = {
+        ...updatedNotes[index],
+        details: editingProjectNoteText.trim(),
+      };
+
+      await updateDoc(doc(db, "projects", String(project.project_id)), {
+        notes: updatedNotes,
+      });
+
+      setProject((prev) => ({
+        ...prev,
+        notes: updatedNotes,
+      }));
+
+      setEditingProjectNoteIndex(-1);
+      setEditingProjectNoteText("");
+    } catch (err) {
+      console.error("Failed to edit project note: ", err);
+    }
+  };
+
+  const handleDeleteProjectNote = async (index) => {
+    try {
+      const updatedNotes = [...(project.notes || [])];
+      updatedNotes.splice(index, 1);
+
+      await updateDoc(doc(db, "projects", String(project.project_id)), {
+        notes: updatedNotes,
+      });
+
+      setProject((prev) => ({
+        ...prev,
+        notes: updatedNotes,
+      }));
+    } catch (err) {
+      console.error("Failed to delete project notes: ", err);
+    }
+  };
+
+  const handleDeleteForMe = async () => {
+    try {
+      const success = await deleteProjectForMe(project.project_id);
+      if (success) {
+        if (onProjectUpdated) onProjectUpdated();
+        onClose();
+      }
+      setDeleteDialogOpen(false);
+    } catch (error) {
+      console.error("Error deleting project for me:", error);
+      setDeleteDialogOpen(false);
+    }
+  };
+
+  const handleDeleteForEveryone = async () => {
+    try {
+      const success = await deleteProjectForEveryone(project.project_id);
+      if (success) {
+        if (onProjectUpdated) onProjectUpdated();
+        onClose();
+      }
+      setDeleteDialogOpen(false);
+    } catch (error) {
+      console.error("Error deleting project for everyone:", error);
+      setDeleteDialogOpen(false);
     }
   };
 
@@ -270,23 +401,71 @@ export default function ProjectCardModal({
           </div>
 
           <Divider className="mt-3" />
-
-          {/* Notes */}
           <h1 className="font-bold text-xl mt-3">Notes</h1>
           <div className="mt-2">
             {project.notes && project.notes.length > 0 ? (
-              project.notes.map((noteGroup, index) => (
-                <div key={index} className={index > 0 ? "mt-3" : ""}>
-                  <h2 className="font-bold">
-                    {noteGroup.user === "Me"
-                      ? "My Notes"
-                      : `${noteGroup.user}'s Notes`}
-                  </h2>
-                  <ul className="list-disc pl-6">
-                    {noteGroup.notes.map((note, noteIndex) => (
-                      <li key={noteIndex}>{note}</li>
-                    ))}
-                  </ul>
+              project.notes.map((note, index) => (
+                <div key={index} className="mb-2">
+                  {editingProjectNoteIndex === index ? (
+                    <>
+                      <input
+                        type="text"
+                        value={editingProjectNoteText}
+                        onChange={(e) =>
+                          setEditingProjectNoteText(e.target.value)
+                        }
+                        className="border p-1 w-full"
+                      />
+                      <div className="flex gap-2 mt-1">
+                        <Button
+                          size="small"
+                          variant="contained"
+                          onClick={() => handleSaveEditedProjectNote(index)}
+                        >
+                          Save
+                        </Button>
+                        <Button
+                          size="small"
+                          variant="outlined"
+                          onClick={() => setEditingProjectNoteIndex(-1)}
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <li className="text-[14px]">{note.details}</li>
+                      <div className="flex justify-between items-center mb-1">
+                        <div className="flex flex-col">
+                          <p className="text-gray-500 text-xs">
+                            {note.user} -{" "}
+                            {new Date(note.timestamp).toLocaleString()}
+                          </p>
+                        </div>
+                        {note.userId === user?.uid && (
+                          <div className="flex items-center gap-1">
+                            <IconButton
+                              size="small"
+                              onClick={() => {
+                                setEditingProjectNoteIndex(index);
+                                setEditingProjectNoteText(note.details);
+                              }}
+                            >
+                              <EditIcon fontSize="small" />
+                            </IconButton>
+                            <IconButton
+                              size="small"
+                              color="error"
+                              onClick={() => handleDeleteProjectNote(index)}
+                            >
+                              <DeleteIcon fontSize="small" />
+                            </IconButton>
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  )}
                 </div>
               ))
             ) : (
@@ -294,20 +473,55 @@ export default function ProjectCardModal({
                 No notes available for this project
               </p>
             )}
+
+            <div className="mt-4">
+              <h2 className="font-bold text-[16px]">Add a Note</h2>
+              <textarea
+                rows="3"
+                value={newProjectNoteText}
+                onChange={(e) => setNewProjectNoteText(e.target.value)}
+                className="border w-full p-2 mt-2"
+                placeholder="Write your note here..."
+              />
+              <Button
+                variant="contained"
+                className="mt-2"
+                onClick={handleAddProjectNote}
+                disabled={!newProjectNoteText.trim()}
+              >
+                Add Note
+              </Button>
+            </div>
           </div>
+
           {!project.completed ? (
             <>
               <Divider className="mt-6 mb-4" />
-              <div className="text-center mt-6 mb-6">
+              <div className="flex justify-between mt-6 mb-6">
+                {!project.completed ? (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={
+                      !project || project.tasks_completed < project.tasks_total
+                    }
+                    onClick={async () =>
+                      handleMarkCompleted(project.project_id)
+                    }
+                  >
+                    Mark Project as Complete
+                  </Button>
+                ) : (
+                  <div></div>
+                )}
+
                 <Button
                   variant="contained"
-                  color="primary"
-                  disabled={
-                    !project || project.tasks_completed < project.tasks_total
-                  }
-                  onClick={async () => handleMarkCompleted(project.project_id)}
+                  color="error"
+                  startIcon={<DeleteIcon />}
+                  onClick={() => setDeleteDialogOpen(true)}
                 >
-                  Mark Project as Complete
+                  Delete Project
                 </Button>
               </div>
             </>
@@ -325,6 +539,28 @@ export default function ProjectCardModal({
         allTasks={[...myTasks, ...otherTasks, ...availableTasks]}
         onTaskDeleted={() => loadTasks()}
       />
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+      >
+        <DialogTitle>Delete Project</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            How would you like to delete the project "{project?.project_name}"?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteDialogOpen(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDeleteForMe} color="warning">
+            Delete for me
+          </Button>
+          <Button onClick={handleDeleteForEveryone} color="error">
+            Delete for everyone
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

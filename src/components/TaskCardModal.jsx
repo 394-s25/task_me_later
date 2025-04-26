@@ -29,6 +29,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import { getAuth } from "firebase/auth";
 import { getOrCreateConversation } from "../services/messagesService";
+import { getDoc, doc } from "firebase/firestore";
+import { db } from "../services/firestoreConfig";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -90,18 +92,35 @@ export default function TaskCardModal({
   };
 
   const handleAddNote = async () => {
-    const note = {
-      user: getAuth().currentUser.displayName || "Unknown",
-      userId: currentUserId,
-      details: newNoteText.trim(),
-      timestamp: new Date().toISOString(),
-    };
     try {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      let displayName = user.displayName;
+
+      if (!displayName) {
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+          displayName = userSnap.data().display_name || "Unknown";
+        } else {
+          displayName = "Unknown";
+        }
+      }
+
+      const note = {
+        user: displayName,
+        userId: user.uid,
+        details: newNoteText.trim(),
+        timestamp: new Date().toISOString(),
+      };
+
       await addNoteToTask(task.id, note);
+
       setTask((prev) => ({
         ...prev,
         task_notes: [...(prev.task_notes || []), note],
       }));
+
       setNewNoteText("");
     } catch (err) {
       console.error("Failed to add note: ", err);

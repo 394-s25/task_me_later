@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Dialog,
@@ -9,14 +9,22 @@ import {
   MenuItem,
   FormControlLabel,
   Checkbox,
+  FormControl,
+  InputLabel,
+  Select,
+  OutlinedInput,
+  Box,
+  Chip,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { addTaskToProject } from "../services/tasksServices";
+import { getProjectMembers } from "../services/tasksServices";
 
 const statuses = ["To Do", "In Progress", "Completed"];
 
 export default function AddTaskForm({ projectId, onTaskAdded }) {
   const [open, setOpen] = useState(false);
-
+  const theme = useTheme();
   const [title, setTitle] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [status, setStatus] = useState("To Do");
@@ -25,7 +33,18 @@ export default function AddTaskForm({ projectId, onTaskAdded }) {
   const [match, setMatch] = useState(0);
   const [helpReq, setHelpReq] = useState(false);
   const [dependencies, setDependencies] = useState("");
-
+  const [taskMembers, setTaskMembers] = useState([]);
+  const [people, setPeople] = useState([]);
+  
+  useEffect(() => {
+  const fetch_users = async () => {
+    const users = await getProjectMembers(projectId);
+    setPeople(users);
+    console.log("users", people);
+  }
+          fetch_users();
+  }, [projectId]);
+  
   const handleSubmit = async () => {
     if (!title || !dueDate) return;
     const taskData = {
@@ -35,6 +54,7 @@ export default function AddTaskForm({ projectId, onTaskAdded }) {
       task_details: details,
       task_score: Number(score),
       task_match: Number(match),
+      assigned_to: taskMembers,
       help_req: helpReq,
       task_notes: [],
       project_dependencies: dependencies?.trim()
@@ -46,6 +66,15 @@ export default function AddTaskForm({ projectId, onTaskAdded }) {
     };
     try {
       await addTaskToProject(projectId, taskData);
+      setTitle("");
+      setDueDate("");
+      setStatus("To Do");
+      setDetails("");
+      setScore(0);
+      setMatch(0);
+      setHelpReq(false);
+      setDependencies("");
+      setTaskMembers([]);
       if (onTaskAdded) onTaskAdded();
       setOpen(false);
     } catch (err) {
@@ -123,6 +152,43 @@ export default function AddTaskForm({ projectId, onTaskAdded }) {
             onChange={(e) => setDependencies(e.target.value)}
             fullWidth
           />
+          <FormControl fullWidth sx={{ mb: 2 }}>
+        <InputLabel id="members-label">Assign to</InputLabel>
+        <Select
+          multiple
+          value={taskMembers}
+          onChange={(e) =>
+            setTaskMembers(
+              typeof e.target.value === "string"
+                ? e.target.value.split(",")
+                : e.target.value
+            )
+          }
+          input={<OutlinedInput label="Assign To" />}
+          renderValue={(selectedIds) => (
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+              {selectedIds.map((id) => {
+                const user = people.find((p) => p.id === id);
+                return <Chip key={id} label={user?.name || id} />;
+              })}
+            </Box>
+          )}
+        >
+          {people.map((person) => (
+            <MenuItem
+              key={person.id}
+              value={person.id}
+              style={{
+                fontWeight: taskMembers.includes(person.id)
+                  ? theme.typography.fontWeightMedium
+                  : theme.typography.fontWeightRegular,
+              }}
+            >
+              {person.name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
           <FormControlLabel
             control={
               <Checkbox
@@ -141,5 +207,4 @@ export default function AddTaskForm({ projectId, onTaskAdded }) {
         </DialogActions>
       </Dialog>
     </>
-  );
-}
+  );}
