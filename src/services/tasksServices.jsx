@@ -164,6 +164,16 @@ export const addTaskToProject = async (projectId, taskData) => {
   return docRef.id;
 };
 
+export const editTask = async (taskId, taskData) => {
+  const updatedTask = {
+    task_title: taskData.task_title,
+    due_date: taskData.due_date,
+    task_details: taskData.task_details || "",
+  };
+  const docRef = doc(db, "tasks", taskId);
+  await updateDoc(docRef, updatedTask);
+};
+
 export const updateTaskStatus = async (taskId, newStatus) => {
   const taskRef = doc(db, "tasks", taskId);
   await runTransaction(db, async (transaction) => {

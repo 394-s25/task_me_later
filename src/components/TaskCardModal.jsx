@@ -14,11 +14,13 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  TextField,
 } from "@mui/material";
 import {
   updateTaskStatus,
   requestHelpForTask,
   deleteTask,
+  editTask,
 } from "../services/tasksServices";
 import { useNavigate } from "react-router-dom";
 import { getAuth } from "firebase/auth";
@@ -39,6 +41,19 @@ export default function TaskCardModal({
   const navigate = useNavigate();
   const currentUserId = getAuth().currentUser?.uid;
   const [confirmOpen, setConfirmOpen] = React.useState(false);
+  const [editing, setEditing] = React.useState(false);
+
+  const [editedTitle, setEditedTitle] = React.useState("");
+  const [editedDueDate, setEditedDueDate] = React.useState("");
+  const [editedDetails, setEditedDetails] = React.useState("");
+
+  React.useEffect(() => {
+    if (task) {
+      setEditedTitle(task.task_title || "");
+      setEditedDueDate(task.due_date || "");
+      setEditedDetails(task.task_details || "");
+    }
+  }, [task]);
 
   if (!task) return null;
 
@@ -79,6 +94,25 @@ export default function TaskCardModal({
     }
   };
 
+  const handleSaveEdits = async () => {
+    try {
+      await editTask(task.id, {
+        task_title: editedTitle,
+        due_date: editedDueDate,
+        task_details: editedDetails,
+      });
+      setTask((prev) => ({
+        ...prev,
+        task_title: editedTitle,
+        due_date: editedDueDate,
+        task_details: editedDetails,
+      }));
+      setEditing(false);
+    } catch (err) {
+      console.error("Failed to update task: ", err);
+    }
+  };
+
   const isCompleted = task.task_status === "Completed";
 
   return (
@@ -110,7 +144,16 @@ export default function TaskCardModal({
         </AppBar>
 
         <div class="text-center mt-2 mb-3">
-          <h1 class="text-[40px] font-bold">{task.task_title}</h1>
+          {editing ? (
+            <TextField
+              fullWidth
+              value={(e) => setEditedTitle(e.target.value)}
+              label="Task Title"
+              sx={{ mb: 2 }}
+            />
+          ) : (
+            <h1 class="text-[40px] font-bold">{task.task_title}</h1>
+          )}
           <h2 class="text-[20px] mt-[-5px]">
             <b>{task.project_name || "Unknown project"}</b>
           </h2>
@@ -220,6 +263,34 @@ export default function TaskCardModal({
                 onClick={() => setConfirmOpen(true)}
               >
                 Delete Task
+              </Button>
+              {!editing && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => setEditing(true)}
+                >
+                  Edit Task
+                </Button>
+              )}
+            </div>
+          )}
+
+          {editing && !isCompleted && (
+            <div className="flex flex-row justify-center items-center gap-4 mt-5">
+              <Button
+                variant="contained"
+                color="success"
+                onClick={handleSaveEdits}
+              >
+                Save
+              </Button>
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={() => setEditing(false)}
+              >
+                Cancel
               </Button>
             </div>
           )}
