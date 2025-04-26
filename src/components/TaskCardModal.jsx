@@ -8,6 +8,8 @@ import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
 import tml_logo_white from "../imgs/tml_logo_white.png";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
   Chip,
   DialogActions,
@@ -20,7 +22,9 @@ import {
   updateTaskStatus,
   requestHelpForTask,
   deleteTask,
-  editTask,
+  addNoteToTask,
+  updateNoteInTask,
+  updateTaskNotes,
 } from "../services/tasksServices";
 import { useNavigate } from "react-router-dom";
 import { getAuth } from "firebase/auth";
@@ -41,19 +45,10 @@ export default function TaskCardModal({
   const navigate = useNavigate();
   const currentUserId = getAuth().currentUser?.uid;
   const [confirmOpen, setConfirmOpen] = React.useState(false);
-  const [editing, setEditing] = React.useState(false);
 
-  const [editedTitle, setEditedTitle] = React.useState("");
-  const [editedDueDate, setEditedDueDate] = React.useState("");
-  const [editedDetails, setEditedDetails] = React.useState("");
-
-  React.useEffect(() => {
-    if (task) {
-      setEditedTitle(task.task_title || "");
-      setEditedDueDate(task.due_date || "");
-      setEditedDetails(task.task_details || "");
-    }
-  }, [task]);
+  const [newNoteText, setNewNoteText] = React.useState("");
+  const [editingNoteIndex, setEditingNoteIndex] = React.useState(-1);
+  const [editingNoteText, setEditingNoteText] = React.useState("");
 
   if (!task) return null;
 
@@ -94,22 +89,58 @@ export default function TaskCardModal({
     }
   };
 
-  const handleSaveEdits = async () => {
+  const handleAddNote = async () => {
+    const note = {
+      user: getAuth().currentUser.displayName || "Unknown",
+      userId: currentUserId,
+      details: newNoteText.trim(),
+      timestamp: new Date().toISOString(),
+    };
     try {
-      await editTask(task.id, {
-        task_title: editedTitle,
-        due_date: editedDueDate,
-        task_details: editedDetails,
-      });
+      await addNoteToTask(task.id, note);
       setTask((prev) => ({
         ...prev,
-        task_title: editedTitle,
-        due_date: editedDueDate,
-        task_details: editedDetails,
+        task_notes: [...(prev.task_notes || []), note],
       }));
-      setEditing(false);
+      setNewNoteText("");
     } catch (err) {
-      console.error("Failed to update task: ", err);
+      console.error("Failed to add note: ", err);
+    }
+  };
+
+  const handleSaveEditedNote = async (index) => {
+    const oldNote = task.task_notes[index];
+    const newNote = {
+      ...oldNote,
+      details: editingNoteText.trim(),
+    };
+    try {
+      await updateNoteInTask(task.id, oldNote, newNote);
+      setTask((prev) => {
+        const updatedNotes = [...prev.task_notes];
+        updatedNotes[index] = newNote;
+        return { ...prev, task_notes: updatedNotes };
+      });
+      setEditingNoteIndex(-1);
+      setEditingNoteText("");
+    } catch (err) {
+      console.error("Failed to update note: ", err);
+    }
+  };
+
+  const handleDeleteNote = async (noteIndex) => {
+    try {
+      const updatedNotes = [...task.task_notes];
+      updatedNotes.splice(noteIndex, 1);
+
+      await updateTaskNotes(task.id, updatedNotes);
+
+      setTask((prev) => ({
+        ...prev,
+        task_notes: updatedNotes,
+      }));
+    } catch (err) {
+      console.error("Failed to delete note: ", err);
     }
   };
 
@@ -234,13 +265,101 @@ export default function TaskCardModal({
           </div>
           <hr class="mt-3" />
           <div>
-            <h1 class="font-bold text-[19px]">Notes</h1>
-            {task.task_notes?.map((notes, index) => (
-              <div key={index}>
-                <h1 class="font-bold text-[16px]">{notes.user}</h1>
-                <li class="text-[14px]">{notes.details}</li>
+            <h1 className="font-bold text-[19px]">Notes</h1>
+            {task.task_notes?.map((note, index) => (
+              <div key={index} className="mb-2">
+                {editingNoteIndex === index ? (
+                  <>
+                    <input
+                      type="text"
+                      value={editingNoteText}
+                      onChange={(e) => setEditingNoteText(e.target.value)}
+                      className="border p-1 w-full"
+                    />
+                    <div className="flex gap-2 mt-1">
+                      <Button
+                        size="small"
+                        variant="contained"
+                        onClick={() => handleSaveEditedNote(index)}
+                      >
+                        Save
+                      </Button>
+                      <Button
+                        size="small"
+                        variant="outlined"
+                        onClick={() => setEditingNoteIndex(-1)}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <li className="text-[14px]">{note.details}</li>
+                    {note.userId === currentUserId ? (
+                      <>
+                        <div className="flex justify-between items-center mb-1">
+                          <div className="flex flex-col">
+                            <p className="text-gray-500 text-xs">
+                              {note.user} -{" "}
+                              {new Date(note.timestamp).toLocaleString()}
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <IconButton
+                              size="small"
+                              onClick={() => {
+                                setEditingNoteIndex(index);
+                                setEditingNoteText(note.details);
+                              }}
+                            >
+                              <EditIcon fontSize="small" />
+                            </IconButton>
+                            <IconButton
+                              size="small"
+                              color="error"
+                              onClick={() => handleDeleteNote(index)}
+                            >
+                              <DeleteIcon fontSize="small" />
+                            </IconButton>
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="flex justify-between items-center mb-1">
+                          <div className="flex flex-col">
+                            <p className="text-gray-500 text-xs">
+                              {note.user} -{" "}
+                              {new Date(note.timestamp).toLocaleString()}
+                            </p>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </>
+                )}
               </div>
             ))}
+
+            <div className="mt-4">
+              <h2 className="font-bold text-[16px]">Add a Note</h2>
+              <textarea
+                rows="3"
+                value={newNoteText}
+                onChange={(e) => setNewNoteText(e.target.value)}
+                className="border w-full p-2 mt-2"
+                placeholder="Write your note here..."
+              />
+              <Button
+                variant="contained"
+                className="mt-2"
+                onClick={handleAddNote}
+                disabled={!newNoteText.trim()}
+              >
+                Add Note
+              </Button>
+            </div>
           </div>
 
           {!isCompleted && (
