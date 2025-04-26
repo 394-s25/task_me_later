@@ -53,7 +53,7 @@ export default function ProjectCardModal({
   const [newProjectNoteText, setNewProjectNoteText] = useState("");
   const [editingProjectNoteIndex, setEditingProjectNoteIndex] = useState(-1);
   const [editingProjectNoteText, setEditingProjectNoteText] = useState("");
-  
+
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const user = getAuth().currentUser;
@@ -175,6 +175,9 @@ export default function ProjectCardModal({
       }));
     } catch (err) {
       console.error("Failed to delete project notes: ", err);
+    }
+  };
+
   const handleDeleteForMe = async () => {
     try {
       const success = await deleteProjectForMe(project.project_id);
