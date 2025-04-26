@@ -45,7 +45,7 @@ export default function AddNewProject({ onComplete }) {
     };
     fetchMaxID();
   }, []);
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -56,6 +56,7 @@ export default function AddNewProject({ onComplete }) {
         projDueDate,
         projMembers,
       });
+      console.log("project members", projMembers);
       setProjName("");
       setProjDetails("");
       setProjDueDate("");
