@@ -1,7 +1,5 @@
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Card } from "@mui/material";
-import GoogleAuth from "./GoogleAuth";
-// import LogoutButton from "./LogoutButton";
 import React from "react";
 import { useAuthContext } from "../services/userProvider";
 import { useEffect, useState } from "react";
@@ -44,9 +42,11 @@ export default function ProfileDetails() {
               <AccountCircleIcon class="size-25 mt-[-10px]" />
             </>
           )}
-          <h1>{user && user.displayName ? user.displayName : "No name"}</h1>
+          <h1>
+            {profile && profile.display_name ? profile.display_name : "No name"}
+          </h1>
           <h2 class="break-words">
-            {user && user.email ? user.email : "No email"}
+            {profile && profile.email ? profile.email : "No email"}
           </h2>
         </div>
         <div>

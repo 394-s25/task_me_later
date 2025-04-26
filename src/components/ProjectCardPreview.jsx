@@ -64,8 +64,8 @@ export default function ProjectCardPreview({ projects, onProjectUpdated }) {
     return project.completed || false;
   };
 
-  const currentProjects = projects.filter((p) => !isProjectCompleted(p));
-  const pastProjects = projects.filter((p) => isProjectCompleted(p));
+  const currentProjects = projects?.filter((p) => !isProjectCompleted(p)) || [];
+  const pastProjects = projects?.filter((p) => isProjectCompleted(p)) || [];
 
   // Project card component to avoid duplicating code
   const ProjectCard = ({ projectItem }) => (

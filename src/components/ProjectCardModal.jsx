@@ -374,7 +374,10 @@ export default function ProjectCardModal({
       <TaskCardModal
         task={selectedCard}
         open={openTaskModal}
-        onClose={() => setOpenTaskModal(false)}
+        onClose={() => {
+          setOpenTaskModal(false);
+          loadTasks();
+        }}
         setTask={setSelectedCard}
         allTasks={[...myTasks, ...otherTasks, ...availableTasks]}
         onTaskDeleted={() => loadTasks()}

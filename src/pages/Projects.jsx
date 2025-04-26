@@ -26,14 +26,16 @@ const Projects = () => {
   return (
     <>
       <TaskMeLaterBlueLogo />
-      <div className="flex justify-start mb-4 ml-6 mr-6 mt-2 px-6">
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={() => setOpen(true)}
-        >
-          Add Project
-        </Button>
+      <div className="pt-20">
+        <div className="flex justify-start mb-4 ml-6 mr-6 mt-2 px-6">
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={() => setOpen(true)}
+          >
+            Add Project
+          </Button>
+        </div>
       </div>
       <ProjectCardPreview
         projects={projects}
