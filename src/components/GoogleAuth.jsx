@@ -41,7 +41,7 @@ const GoogleAuth = () => {
   });
   return (
     <Button startIcon={<GoogleIcon />} onClick={() => login()} fullWidth>
-      Sign In with Google
+      Log In with Google
     </Button>
   );
 };

@@ -4,7 +4,7 @@ import ProjectTag from "./ProjectTag";
 const SignUpCard = ({ task, onClick, onSignUp }) => {
   return (
     <div
-      className="bg-white m-2 border rounded-lg bg-white shadow-md cursor-pointer"
+      className="m-2 border rounded-lg bg-white shadow-md cursor-pointer"
       onClick={() => onClick(task)}
     >
       <div className="flex justify-between items-center mb-3">
@@ -18,7 +18,7 @@ const SignUpCard = ({ task, onClick, onSignUp }) => {
           ×
         </button>
       </div>
-      
+
       <div className="mb-2">
         <h3 className="text-lg font-medium ml-2">{task.task_title}</h3>
         {task.help_req && (
@@ -28,7 +28,9 @@ const SignUpCard = ({ task, onClick, onSignUp }) => {
         )}
       </div>
 
-      <div className="text-sm text-gray-600 mb-2 ml-2">Due: {task.due_date}</div>
+      <div className="text-sm text-gray-600 mb-2 ml-2">
+        Due: {task.due_date}
+      </div>
 
       <div className="flex justify-end mt-4">
         <button
