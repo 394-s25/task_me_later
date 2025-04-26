@@ -56,7 +56,7 @@ const SignInWithEmailComponent = ({
         </Button>
         <div class="flex items-center w-full mt-5">
           <hr className="flex-grow border-t border-black" />
-          <span className="mx-4 text-black font-medium">OR</span>
+          <span className="mx-4 text-black font-medium ">OR</span>
           <hr className="flex-grow border-t border-black" />
         </div>
         <div class="border-2 border-blue-400 rounded-xl mt-5">
