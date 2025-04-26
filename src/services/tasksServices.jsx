@@ -12,6 +12,8 @@ import {
   increment,
   runTransaction,
   deleteDoc,
+  arrayUnion,
+  arrayRemove,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
@@ -232,4 +234,31 @@ export const getTasksByProjectId = async (projectId, currentUserId) => {
 export const deleteTask = async (taskId) => {
   const taskRef = doc(db, "tasks", taskId);
   await deleteDoc(taskRef);
+};
+
+export const addNoteToTask = async (taskId, note) => {
+  const taskRef = doc(db, "tasks", taskId);
+  await updateDoc(taskRef, {
+    task_notes: arrayUnion(note),
+  });
+};
+
+export const updateNoteInTask = async (taskId, oldNote, newNote) => {
+  const taskRef = doc(db, "tasks", taskId);
+  await updateDoc(taskRef, {
+    task_notes: arrayRemove(oldNote),
+  });
+  await updateDoc(taskRef, {
+    task_notes: arrayUnion(newNote),
+  });
+};
+
+export const updateTaskNotes = async (taskId, updatedNotes) => {
+  try {
+    const taskRef = doc(db, "tasks", taskId);
+    await updateDoc(taskRef, { task_notes: updatedNotes });
+  } catch (err) {
+    console.error("Error updating task notes: ", err);
+    throw err;
+  }
 };
