@@ -57,9 +57,9 @@ export default function ProfileDetails() {
               <Title title="Skills" />
               <Details details={profile?.skills?.join(", ") || "No Skills"} />
               <Title title="Contact" />
-              <Details details={`Email: ${user?.email || "No email"}`} />
+              <Details details={`Email: ${user?.email || "No Email"}`} />
               <Details
-                details={`Phone: ${profile?.phoneNumber || "No phone number"}`}
+                details={`Phone: ${profile?.phoneNumber || "No Phone Number"}`}
               />
             </div>
           </div>

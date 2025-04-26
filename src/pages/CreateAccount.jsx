@@ -15,6 +15,7 @@ import { db } from "../services/firestoreConfig";
 import { doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { getAuth, updateProfile, deleteUser } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import tml_logo_blue from "../imgs/tml_logo_blue.png";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -133,87 +134,101 @@ export default function SignUp() {
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit} sx={{ p: 4 }}>
-      <TextField
-        label="Display Name"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        required
-        value={displayName}
-        onChange={(e) => setDisplayName(e.target.value)}
-      />
-      <TextField
-        label="About Me"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        value={aboutMe}
-        onChange={(e) => setAboutMe(e.target.value)}
-      />
-      <TextField
-        label="Phone Number"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        value={phoneNumber}
-        onChange={(e) => setPhoneNumber(e.target.value)}
-      />
+    <div class="border-2 border-blue-300 mx-auto rounded-md mt-10 max-w-[325px]">
+      <Box component="form" onSubmit={handleSubmit} sx={{ p: 4 }}>
+        <div class=" bg-white">
+          <img
+            class="pb-2 ml-[-25px] items-center min-h-[100%] min-w-75"
+            src={tml_logo_blue}
+          ></img>
+        </div>
+        <h1 class="pt-7 pb-1 px-4 text-gray-500 font-bold text-center">
+          Fill out your bio so your project manager can more easily assign you
+          to tasks.
+        </h1>
+        <TextField
+          label="Display Name"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          required
+          value={displayName}
+          onChange={(e) => setDisplayName(e.target.value)}
+        />
+        <TextField
+          label="About Me"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          value={aboutMe}
+          onChange={(e) => setAboutMe(e.target.value)}
+        />
+        <TextField
+          label="Phone Number"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          value={phoneNumber}
+          onChange={(e) => setPhoneNumber(e.target.value)}
+        />
 
-      <FormControl sx={{ mt: 2, width: "100%" }}>
-        <InputLabel id="skills-label">Skills</InputLabel>
-        <Select
-          labelId="skills-label"
-          multiple
-          value={skills}
-          onChange={(e) =>
-            setSkills(
-              typeof e.target.value === "string"
-                ? e.target.value.split(",")
-                : e.target.value
-            )
-          }
-          input={<OutlinedInput id="select-multiple-chip" label="Skills" />}
-          renderValue={(selected) => (
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-              {selected.map((value) => (
-                <Chip key={value} label={value} />
-              ))}
-            </Box>
-          )}
-          MenuProps={MenuProps}
-        >
-          {SkillsForSignUpPage.map((name) => (
-            <MenuItem
-              key={name}
-              value={name}
-              style={getStyles(name, skills, theme)}
-            >
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+        <FormControl sx={{ mt: 2, width: "100%" }}>
+          <InputLabel id="skills-label">Skills</InputLabel>
+          <Select
+            labelId="skills-label"
+            multiple
+            value={skills}
+            onChange={(e) =>
+              setSkills(
+                typeof e.target.value === "string"
+                  ? e.target.value.split(",")
+                  : e.target.value
+              )
+            }
+            input={<OutlinedInput id="select-multiple-chip" label="Skills" />}
+            renderValue={(selected) => (
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                {selected.map((value) => (
+                  <Chip key={value} label={value} />
+                ))}
+              </Box>
+            )}
+            MenuProps={MenuProps}
+          >
+            {SkillsForSignUpPage.map((name) => (
+              <MenuItem
+                key={name}
+                value={name}
+                style={getStyles(name, skills, theme)}
+              >
+                {name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
 
-      <Button variant="contained" type="submit" sx={{ mt: 3 }}>
-        Sign Up
-      </Button>
-      <Snackbar
-        open={showWarning}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      >
-        <Alert
-          severity="warning"
-          sx={{ width: "100%" }}
-          action={
-            <Button color="inherit" size="small" onClick={extendSession}>
-              I'm here
-            </Button>
-          }
+        <div class="flex items-center justify-center">
+          <Button variant="contained" type="submit" sx={{ mt: 3 }}>
+            Sign Up
+          </Button>
+        </div>
+        <Snackbar
+          open={showWarning}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         >
-          Are you still there? Your progress will be lost in 30 seconds.
-        </Alert>
-      </Snackbar>
-    </Box>
+          <Alert
+            severity="warning"
+            sx={{ width: "100%" }}
+            action={
+              <Button color="inherit" size="small" onClick={extendSession}>
+                I'm here
+              </Button>
+            }
+          >
+            Are you still there? Your progress will be lost in 30 seconds.
+          </Alert>
+        </Snackbar>
+      </Box>
+    </div>
   );
 }

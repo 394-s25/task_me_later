@@ -22,7 +22,7 @@ const SignInWithEmailComponent = ({
   handleEmailSignIn,
 }) => {
   return (
-    <div class="border-2 border-blue-300 mx-10 rounded-md mt-10">
+    <div class="border-2 border-blue-300 mx-auto rounded-md mt-10 max-w-[325px]">
       <img src={Welcome2TMLImg} class="mt-5 w-[90%] flex mx-auto"></img>
       <Box
         sx={{
@@ -75,7 +75,7 @@ const SignUpWithEmail = ({
   handleEmailSignIn,
 }) => {
   return (
-    <div class="border-2 border-blue-300 mx-10 rounded-md mt-10">
+    <div class="border-2 border-blue-300 mx-auto rounded-md mt-10 max-w-[325px]">
       <img src={Welcome2TMLImg} class="mt-5 w-[90%] flex mx-auto"></img>
       <Box
         sx={{
@@ -193,7 +193,7 @@ const SignUpLoginPage = () => {
 
   const LinkToSignUpPage = () => {
     return (
-      <div class="border-2 border-blue-300 mx-10 rounded-md mt-3 p-5">
+      <div class="border-2 border-blue-300 mx-auto rounded-md mt-3 p-5 max-w-[325px]">
         <h3 class="text-center">
           Don't have an account?{" "}
           <a
@@ -209,7 +209,7 @@ const SignUpLoginPage = () => {
 
   const LinkToLogInPage = () => {
     return (
-      <div class="border-2 border-blue-300 mx-10 rounded-md mt-3 p-5">
+      <div class="border-2 border-blue-300 mx-auto rounded-md mt-3 p-5 max-w-[300px]">
         <h3 class="text-center">
           Don't have an account?{" "}
           <a
