@@ -262,3 +262,54 @@ export const updateTaskNotes = async (taskId, updatedNotes) => {
     throw err;
   }
 };
+
+export const getUnassignedTasks = (callback) => {
+  try {
+    const tasksCollection = collection(db, "tasks");
+
+    const unsubscribe = onSnapshot(
+      tasksCollection,
+      async (snapshot) => {
+        const tasks = await Promise.all(
+          snapshot.docs
+            .filter((docSnap) => {
+              const data = docSnap.data();
+              return !data.assigned_to;
+            })
+            .map(async (docSnap) => {
+              const taskData = docSnap.data();
+              const projectRef = taskData.parent_project;
+
+              let projectName = "Unknown Project";
+              if (projectRef) {
+                const projectSnap = await getDoc(projectRef);
+                if (projectSnap.exists()) {
+                  const projectData = projectSnap.data();
+                  projectName = projectData.project_name;
+                }
+              }
+
+              return {
+                id: docSnap.id,
+                ...taskData,
+                project_name: projectName,
+                assigned_name: "Unassigned",
+              };
+            })
+        );
+
+        callback(tasks);
+      },
+      (error) => {
+        console.error("Error in unassigned tasks listener:", error);
+        callback([]);
+      }
+    );
+
+    return unsubscribe;
+  } catch (error) {
+    console.error("Error setting up unassigned tasks listener:", error);
+    callback([]);
+    return () => {};
+  }
+};

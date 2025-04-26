@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import SignUpCard from "./SignUpCard";
-import { getSignupTasks, signUpForTask } from "../services/tasksServices";
+import { getUnassignedTasks, signUpForTask } from "../services/tasksServices";
 
 const TaskSignupPreview = () => {
   const [tasks, setTasks] = useState([]);
@@ -8,8 +8,8 @@ const TaskSignupPreview = () => {
   const [signedUpTasks, setSignedUpTasks] = useState([]);
 
   useEffect(() => {
-    const unsubscribe = getSignupTasks((fetchedTasks) => {
-      console.log("Fetched signup tasks:", fetchedTasks);
+    const unsubscribe = getUnassignedTasks((fetchedTasks) => {
+      console.log("Fetched unassigned tasks:", fetchedTasks);
       setTasks(fetchedTasks);
     });
 
@@ -24,7 +24,7 @@ const TaskSignupPreview = () => {
     try {
       await signUpForTask(task.id);
       setSignedUpTasks([...signedUpTasks, task]);
-      setTasks(tasks.filter((t) => t.id !== task.id));
+      setTasks((prevTasks) => prevTasks.filter((t) => t.id !== task.id));
     } catch (error) {
       console.error("Error signing up for task:", error);
     }
@@ -50,20 +50,6 @@ const TaskSignupPreview = () => {
           <p className="text-lg text-gray-700">
             No more tasks available for signup.
           </p>
-        </div>
-      )}
-
-      {signedUpTasks.length > 0 && (
-        <div className="mt-8">
-          <h2 className="text-xl font-semibold mb-4">Your Signed Up Tasks</h2>
-          <ul className="bg-white rounded-lg shadow-md p-4">
-            {signedUpTasks.map((task) => (
-              <li key={task.id} className="py-2 border-b last:border-0">
-                <span className="font-medium">{task.task_title}</span> -{" "}
-                {task.project_name}
-              </li>
-            ))}
-          </ul>
         </div>
       )}
     </div>
