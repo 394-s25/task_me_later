@@ -5,21 +5,10 @@ import CardActionArea from "@mui/material/CardActionArea";
 import { useState } from "react";
 import Chip from "@mui/material/Chip";
 import ProjectCardModal from "./ProjectCardModal";
-import { getAllProjects } from "../services/projectService";
 
-export default function ProjectCardPreview() {
+export default function ProjectCardPreview({ projects, onProjectUpdated }) {
   const [open, setOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
-  const [projects, setProjects] = useState([]);
-
-  const fetchProjects = async () => {
-    const data = await getAllProjects();
-    setProjects(data);
-  };
-
-  React.useEffect(() => {
-    fetchProjects();
-  }, []);
 
   const handleCardClick = (project) => {
     setOpen(true);
@@ -176,7 +165,7 @@ export default function ProjectCardPreview() {
         open={open}
         onClose={handleDialogClose}
         setProject={setSelectedProject}
-        onProjectUpdated={fetchProjects}
+        onProjectUpdated={onProjectUpdated}
       />
     </>
   );

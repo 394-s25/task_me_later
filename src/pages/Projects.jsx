@@ -13,7 +13,9 @@ const Projects = () => {
   const [projects, setProjects] = useState([]);
 
   const refreshProjects = async () => {
+    console.log("Refreshing projects...");
     const data = await getAllProjects();
+    console.log("New projects data:", data);
     setProjects(data);
   };
 
@@ -33,7 +35,10 @@ const Projects = () => {
           Add Project
         </Button>
       </div>
-      <ProjectCardPreview />
+      <ProjectCardPreview
+        projects={projects}
+        onProjectUpdated={refreshProjects}
+      />
       <Dialog
         open={open}
         onClose={() => setOpen(false)}
