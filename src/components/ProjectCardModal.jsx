@@ -247,7 +247,14 @@ export default function ProjectCardModal({
         onClose={onClose}
         TransitionComponent={Transition}
       >
-        <AppBar sx={{ position: "relative", backgroundColor: "#77A1F3" }}>
+        <AppBar
+          sx={{
+            position: "sticky",
+            top: 0,
+            backgroundColor: "#77A1F3",
+            zIndex: 1100,
+          }}
+        >
           <Toolbar>
             <IconButton
               edge="start"
