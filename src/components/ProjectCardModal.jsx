@@ -8,18 +8,29 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
-import { Button, Chip } from "@mui/material";
+import {
+  Button,
+  Chip,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
 import tml_logo_white from "../imgs/tml_logo_white.png";
 import ProjectSignUpCard from "./ProjectSignUpCard";
 import AddTaskForm from "./AddTaskForm";
 import { getTasksByProjectId, signUpForTask } from "../services/tasksServices";
 import { getAuth } from "firebase/auth";
 import TaskCardModal from "./TaskCardModal";
-import { markProjectAsComplete } from "../services/projectService";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { db } from "../services/firestoreConfig";
 import { getDoc, doc, updateDoc } from "firebase/firestore";
+import {
+  markProjectAsComplete,
+  deleteProjectForMe,
+  deleteProjectForEveryone,
+} from "../services/projectService";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -42,6 +53,8 @@ export default function ProjectCardModal({
   const [newProjectNoteText, setNewProjectNoteText] = useState("");
   const [editingProjectNoteIndex, setEditingProjectNoteIndex] = useState(-1);
   const [editingProjectNoteText, setEditingProjectNoteText] = useState("");
+  
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const user = getAuth().currentUser;
 
@@ -162,6 +175,31 @@ export default function ProjectCardModal({
       }));
     } catch (err) {
       console.error("Failed to delete project notes: ", err);
+  const handleDeleteForMe = async () => {
+    try {
+      const success = await deleteProjectForMe(project.project_id);
+      if (success) {
+        if (onProjectUpdated) onProjectUpdated();
+        onClose();
+      }
+      setDeleteDialogOpen(false);
+    } catch (error) {
+      console.error("Error deleting project for me:", error);
+      setDeleteDialogOpen(false);
+    }
+  };
+
+  const handleDeleteForEveryone = async () => {
+    try {
+      const success = await deleteProjectForEveryone(project.project_id);
+      if (success) {
+        if (onProjectUpdated) onProjectUpdated();
+        onClose();
+      }
+      setDeleteDialogOpen(false);
+    } catch (error) {
+      console.error("Error deleting project for everyone:", error);
+      setDeleteDialogOpen(false);
     }
   };
 
@@ -456,16 +494,31 @@ export default function ProjectCardModal({
           {!project.completed ? (
             <>
               <Divider className="mt-6 mb-4" />
-              <div className="text-center mt-6 mb-6">
+              <div className="flex justify-between mt-6 mb-6">
+                {!project.completed ? (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={
+                      !project || project.tasks_completed < project.tasks_total
+                    }
+                    onClick={async () =>
+                      handleMarkCompleted(project.project_id)
+                    }
+                  >
+                    Mark Project as Complete
+                  </Button>
+                ) : (
+                  <div></div>
+                )}
+
                 <Button
                   variant="contained"
-                  color="primary"
-                  disabled={
-                    !project || project.tasks_completed < project.tasks_total
-                  }
-                  onClick={async () => handleMarkCompleted(project.project_id)}
+                  color="error"
+                  startIcon={<DeleteIcon />}
+                  onClick={() => setDeleteDialogOpen(true)}
                 >
-                  Mark Project as Complete
+                  Delete Project
                 </Button>
               </div>
             </>
@@ -483,6 +536,28 @@ export default function ProjectCardModal({
         allTasks={[...myTasks, ...otherTasks, ...availableTasks]}
         onTaskDeleted={() => loadTasks()}
       />
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+      >
+        <DialogTitle>Delete Project</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            How would you like to delete the project "{project?.project_name}"?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteDialogOpen(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDeleteForMe} color="warning">
+            Delete for me
+          </Button>
+          <Button onClick={handleDeleteForEveryone} color="error">
+            Delete for everyone
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
