@@ -67,6 +67,11 @@ export default function AddNewProject({ onComplete }) {
     }
   };
 
+  const getMemberNameById = (id) => {
+    const person = people.find((p) => p.id === id);
+    return person ? person.name : id;
+  };
+
   return (
     <Box
       component="form"
@@ -113,10 +118,9 @@ export default function AddNewProject({ onComplete }) {
           input={<OutlinedInput label="Project Members" />}
           renderValue={(selectedIds) => (
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-              {selectedIds.map((id) => {
-                const user = people.find((p) => p.id === id);
-                return <Chip key={id} label={user?.display_name || id} />;
-              })}
+              {selectedIds.map((id) => (
+                <Chip key={id} label={getMemberNameById(id)} />
+              ))}
             </Box>
           )}
         >

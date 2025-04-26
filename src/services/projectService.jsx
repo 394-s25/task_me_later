@@ -52,19 +52,7 @@ export const postNewProject = async ({
     my_tasks: [],
     team_tasks: [],
     available_tasks: [],
-    notes: [
-      {
-        user: "Me",
-        notes: ["Working on setting up database."],
-      },
-      {
-        user: "Taylor",
-        notes: [
-          "I have three color scheme options for the page design, need help deciding.",
-          "Presentation is done!",
-        ],
-      },
-    ],
+    notes: [],
   });
 };
 
