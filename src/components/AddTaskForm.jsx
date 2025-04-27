@@ -37,13 +37,12 @@ export default function AddTaskForm({ projectId, onTaskAdded }) {
   const [people, setPeople] = useState([]);
   
   useEffect(() => {
-  const fetch_users = async () => {
+  (async () => {
     const users = await getProjectMembers(projectId);
     setPeople(users);
-    console.log("users", people);
-  }
-          fetch_users();
-  }, [projectId]);
+    console.log("Fetched users:", users);
+  })();
+}, [projectId]);
   
   const handleSubmit = async () => {
     if (!title || !dueDate) return;
