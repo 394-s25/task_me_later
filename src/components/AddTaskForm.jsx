@@ -194,7 +194,7 @@ export default function AddTaskForm({ projectId, onTaskAdded }) {
                 checked={helpReq}
                 onChange={(e) => setHelpReq(e.target.checked)}
               />
-            }
+            } 
             label="Needs Help"
           />
         </DialogContent>
