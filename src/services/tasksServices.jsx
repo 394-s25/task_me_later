@@ -148,6 +148,7 @@ export const signUpForTask = async (taskId) => {
 export const addTaskToProject = async (projectId, taskData) => {
   const parentRef = doc(db, "projects", String(projectId));
   const newTask = {
+    assigned_to: taskData.assigned_to || [],
     task_title: taskData.task_title,
     due_date: taskData.due_date,
     task_status: "To Do",
@@ -164,6 +165,16 @@ export const addTaskToProject = async (projectId, taskData) => {
     tasks_total: increment(1),
   });
   return docRef.id;
+};
+
+export const editTask = async (taskId, taskData) => {
+  const updatedTask = {
+    task_title: taskData.task_title,
+    due_date: taskData.due_date,
+    task_details: taskData.task_details || "",
+  };
+  const docRef = doc(db, "tasks", taskId);
+  await updateDoc(docRef, updatedTask);
 };
 
 export const updateTaskStatus = async (taskId, newStatus) => {
@@ -311,5 +322,41 @@ export const getUnassignedTasks = (callback) => {
     console.error("Error setting up unassigned tasks listener:", error);
     callback([]);
     return () => {};
+  }
+};
+
+
+export const getProjectMembers = async (projectId) => {
+  try {
+    // Fetch project document to get project_members
+    const projectRef = doc(db, "projects", String(projectId));
+    const projectSnap = await getDoc(projectRef);
+    if (!projectSnap.exists()) {
+      console.error("Project not found:", projectId);
+      return [];
+    }
+    const projectMembers = projectSnap.data().project_members || [];
+
+    // If no project members, return empty array
+    if (projectMembers.length === 0) {
+      return [];
+    }
+
+    // Fetch user documents for project_members
+    const userPromises = projectMembers.map(async (userId) => {
+      const userRef = doc(db, "users", userId);
+      const userSnap = await getDoc(userRef);
+      if (userSnap.exists()) {
+        return { id: userSnap.id, name: userSnap.data().display_name };
+      }
+      return null;
+    });
+
+    const users = await Promise.all(userPromises);
+    // Filter out null values (users not found)
+    return users.filter((user) => user !== null);
+  } catch (error) {
+    console.error("Error fetching project members:", error);
+    return [];
   }
 };
