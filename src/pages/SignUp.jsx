@@ -209,7 +209,7 @@ const SignUpLoginPage = () => {
 
   const LinkToLogInPage = () => {
     return (
-      <div class="border-2 border-blue-300 mx-auto rounded-md mt-3 p-5 max-w-[300px]">
+      <div class="border-2 border-blue-300 mx-auto rounded-md mt-3 p-5 max-w-[325px]">
         <h3 class="text-center">
           Don't have an account?{" "}
           <a

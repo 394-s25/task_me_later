@@ -60,22 +60,6 @@ export default function ChatWindow() {
           Chat with: {chatPartnerName}
         </Typography>
       </Box>
-      <Tooltip title="Delete Conversation">
-        <IconButton
-          color="error"
-          onClick={async () => {
-            const confirm = window.confirm(
-              "Are you sure you want to delete this conversation?"
-            );
-            if (confirm) {
-              await deleteConversation(conversationId);
-              navigate("/messages");
-            }
-          }}
-        >
-          <DeleteIcon />
-        </IconButton>
-      </Tooltip>
       <Paper sx={{ p: 2, mb: 2, height: 400, overflowY: "auto" }}>
         <List>
           {messages.map((msg) => {

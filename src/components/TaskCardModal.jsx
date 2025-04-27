@@ -123,6 +123,7 @@ export default function TaskCardModal({
       setNewNoteText("");
     } catch (err) {
       console.error("Failed to add note: ", err);
+      // comment
     }
   };
 
