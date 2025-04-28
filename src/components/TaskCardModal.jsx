@@ -265,17 +265,19 @@ export default function TaskCardModal({
                           key={task.assigned_to[index]}
                           {...(task.assigned_to[index] !== currentUserId && {
                             onClick: async () => {
-                              const conversationId = await getOrCreateConversation(
-                                currentUserId,
-                                task.assigned_to[index]
-                              );
+                              const conversationId =
+                                await getOrCreateConversation(
+                                  currentUserId,
+                                  task.assigned_to[index]
+                                );
                               navigate(`/chat/${conversationId}`, {
                                 state: {
                                   displayName: name,
                                 },
                               });
                             },
-                            className: "cursor-pointer hover:underline hover:text-blue-500",
+                            className:
+                              "cursor-pointer hover:underline hover:text-blue-500",
                           })}
                         >
                           {name}
