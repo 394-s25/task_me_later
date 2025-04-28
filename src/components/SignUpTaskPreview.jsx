@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import SignUpCard from "./SignUpCard";
 import { getUnassignedTasks, signUpForTask } from "../services/tasksServices";
+import { getAvailableTasks } from "../services/tasksServices";
 
 const TaskSignupPreview = () => {
   const [tasks, setTasks] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
   const [signedUpTasks, setSignedUpTasks] = useState([]);
 
-  useEffect(() => {
-    const unsubscribe = getUnassignedTasks((fetchedTasks) => {
+  useEffect(() => { //this line below
+    const unsubscribe = getAvailableTasks((fetchedTasks) => {
       console.log("Fetched unassigned tasks:", fetchedTasks);
       setTasks(fetchedTasks);
     });

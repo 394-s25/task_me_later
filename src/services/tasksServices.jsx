@@ -31,7 +31,7 @@ export const getUsersTasks = (callback) => {
     const q = query(
       collection(db, "tasks"),
       where("help_req", "==", false),
-      where("assigned_to", "==", user.uid)
+      where("assigned_to", "array-contains", user.uid)
     );
 
     const unsubscribe = onSnapshot(
@@ -87,7 +87,7 @@ export const getUsersTasks = (callback) => {
 
 export const getSignupTasks = (callback) => {
   try {
-    const q = query(collection(db, "tasks"), where("help_req", "==", true));
+    const q = query(collection(db, "tasks"), where("help_req", "==", true), where("assigned_to", "==", []));
 
     const unsubscribe = onSnapshot(
       q,
@@ -137,7 +137,7 @@ export const signUpForTask = async (taskId) => {
     const taskRef = doc(db, "tasks", taskId);
     await updateDoc(taskRef, {
       help_req: false,
-      assigned_to: user?.uid || null,
+      assigned_to: arrayUnion(user?.uid),
     });
   } catch (error) {
     console.error("Error signing up for task:", error);
@@ -213,20 +213,21 @@ export const getTasksByProjectId = async (projectId, currentUserId) => {
 
     const taskPromises = snapshot.docs.map(async (taskDoc) => {
       const data = taskDoc.data();
-      let assignedName = "Unassigned";
-      if (data.assigned_to) {
-        const userRef = doc(db, "users", data.assigned_to);
+      let assignedName = ["Unassigned"];
+      if (Array.isArray(data.assigned_to) && data.assigned_to.length > 0) {
+        const userPromises = data.assigned_to.map(async (userId) => {
+        const userRef = doc(db, "users", userId);
         const userSnap = await getDoc(userRef);
-        if (userSnap.exists()) {
-          assignedName = userSnap.data().display_name;
+        return userSnap.exists() ? userSnap.data().display_name : "Unknown";
+        });
+          assignedName = await Promise.all(userPromises);
         }
-      }
 
       const task = { id: taskDoc.id, assigned_name: assignedName, ...data };
 
-      if (data.assigned_to === currentUserId) {
+      if (data.assigned_to.includes(currentUserId)) {
         mine.push(task);
-      } else if (data.assigned_to) {
+      } else if (data.assigned_to.length > 0) {
         assigned.push(task);
       } else {
         available.push(task);
@@ -285,7 +286,7 @@ export const getUnassignedTasks = (callback) => {
           snapshot.docs
             .filter((docSnap) => {
               const data = docSnap.data();
-              return !data.assigned_to;
+              return Array.isArray(data.assigned_to) && data.assigned_to.length === 0 && !data.help_req;
             })
             .map(async (docSnap) => {
               const taskData = docSnap.data();
@@ -358,5 +359,90 @@ export const getProjectMembers = async (projectId) => {
   } catch (error) {
     console.error("Error fetching project members:", error);
     return [];
+  }
+};
+
+export const getAvailableTasks = (callback) => {
+  try {
+    const tasksCollection = collection(db, "tasks");
+
+    // Query 1: Tasks with help_req: true
+    const q1 = query(tasksCollection, where("help_req", "==", true));
+    // Query 2: Tasks with assigned_to: []
+    const q2 = query(tasksCollection, where("assigned_to", "==", []));
+
+    // Store unique tasks to avoid duplicates
+    const tasksMap = new Map();
+
+    // Process snapshot for a query
+    const processSnapshot = async (snapshot) => {
+      const tasksPromises = snapshot.docs.map(async (docSnap) => {
+        const taskData = docSnap.data();
+        const projectRef = taskData.parent_project;
+
+        let projectName = "Unknown Project";
+        if (projectRef) {
+          const projectSnap = await getDoc(projectRef);
+          if (projectSnap.exists()) {
+            projectName = projectSnap.data().project_name;
+          }
+        }
+
+        let assignedName = "Unassigned";
+        if (Array.isArray(taskData.assigned_to) && taskData.assigned_to.length > 0) {
+          const userPromises = taskData.assigned_to.map(async (userId) => {
+            const userRef = doc(db, "users", userId);
+            const userSnap = await getDoc(userRef);
+            return userSnap.exists() ? userSnap.data().display_name || "Unknown" : "Unknown";
+          });
+          assignedName = await Promise.all(userPromises);
+        }
+
+        return {
+          id: docSnap.id,
+          ...taskData,
+          project_name: projectName,
+          assigned_name: assignedName,
+        };
+      });
+
+      const tasks = await Promise.all(tasksPromises);
+      tasks.forEach((task) => tasksMap.set(task.id, task));
+    };
+
+    // Subscribe to both queries
+    const unsubscribe1 = onSnapshot(
+      q1,
+      async (snapshot) => {
+        await processSnapshot(snapshot);
+        callback(Array.from(tasksMap.values()));
+      },
+      (error) => {
+        console.error("Error in available tasks listener (help_req):", error);
+        callback([]);
+      }
+    );
+
+    const unsubscribe2 = onSnapshot(
+      q2,
+      async (snapshot) => {
+        await processSnapshot(snapshot);
+        callback(Array.from(tasksMap.values()));
+      },
+      (error) => {
+        console.error("Error in available tasks listener (unassigned):", error);
+        callback([]);
+      }
+    );
+
+    // Return function to unsubscribe from both
+    return () => {
+      unsubscribe1();
+      unsubscribe2();
+    };
+  } catch (error) {
+    console.error("Error setting up available tasks listener:", error);
+    callback([]);
+    return () => {};
   }
 };

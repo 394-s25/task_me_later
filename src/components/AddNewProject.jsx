@@ -15,6 +15,7 @@ import { postNewProject } from "../services/projectService";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../services/firestoreConfig";
 import { getAllUsers } from "../services/usersService";
+import { getAuth } from "firebase/auth";
 
 export default function AddNewProject({ onComplete }) {
   const [projId, setProjId] = useState(null);
@@ -24,6 +25,8 @@ export default function AddNewProject({ onComplete }) {
   const [projMembers, setProjMembers] = useState([]);
   const [people, setPeople] = useState([]);
   const theme = useTheme();
+  const auth = getAuth();
+  const user = auth.currentUser;
   
   useEffect(() => {
     const fetchMaxID = async () => {
@@ -48,15 +51,19 @@ export default function AddNewProject({ onComplete }) {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const creatorId = user?.uid;
+    const finalMembers = projMembers.includes(creatorId)
+      ? projMembers
+      : [...projMembers, creatorId]; 
     try {
       await postNewProject({
         projId,
         projName,
         projDetails,
         projDueDate,
-        projMembers,
+        finalMembers,
       });
-      console.log("project members", projMembers);
+      //console.log("project members", projMembers);
       setProjName("");
       setProjDetails("");
       setProjDueDate("");
