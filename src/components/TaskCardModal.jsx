@@ -257,25 +257,32 @@ export default function TaskCardModal({
             <h2>
               <div>
                 <h1 className="font-bold">
-                  Assigned To
-                  {task.assigned_name &&
-                  task.assigned_name !== "Unassigned" &&
-                  task.assigned_to !== currentUserId ? (
-                    <span
-                      onClick={async () => {
-                        const conversationId = await getOrCreateConversation(
-                          currentUserId,
-                          task.assigned_to
-                        );
-                        navigate(`/chat/${conversationId}`, {
-                          state: {
-                            displayName: task.assigned_name,
-                          },
-                        });
-                      }}
-                      className="text-blue-600 cursor-pointer underline ml-2"
-                    >
-                      {task.assigned_name}
+                  Assigned To:
+                  {task.assigned_name && task.assigned_name !== "Unassigned" ? (
+                    <span className="ml-2 font-normal ">
+                      {task.assigned_name.map((name, index) => (
+                        <span
+                          key={task.assigned_to[index]}
+                          {...(task.assigned_to[index] !== currentUserId && {
+                            onClick: async () => {
+                              const conversationId = await getOrCreateConversation(
+                                currentUserId,
+                                task.assigned_to[index]
+                              );
+                              navigate(`/chat/${conversationId}`, {
+                                state: {
+                                  displayName: name,
+                                },
+                              });
+                            },
+                            className: "cursor-pointer hover:underline hover:text-blue-500",
+                          })}
+                        >
+                          {name}
+                          {task.assigned_to[index] === currentUserId && " (me)"}
+                          {index < task.assigned_name.length - 1 && ", "}
+                        </span>
+                      ))}
                     </span>
                   ) : (
                     <span className="ml-2">

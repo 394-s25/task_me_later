@@ -56,6 +56,7 @@ export const postNewProject = async ({
   });
 };
 
+
 export const getAllProjects = async () => {
   console.log("Getting all projects from database");
   const auth = getAuth();
@@ -69,8 +70,9 @@ export const getAllProjects = async () => {
       ...doc.data(),
     }))
     .filter((project) => {
-      const hiddenFor = project.hidden_for || [];
-      return !hiddenFor.includes(user?.uid);
+      //const hiddenFor = project.hidden_for || [];
+      const projectMembers = project.project_members || [];
+      return user && projectMembers.includes(user.uid); // && !hiddenFor.includes(user.uid);
     });
 
   console.log("Projects returned:", projects);
