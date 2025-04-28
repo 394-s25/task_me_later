@@ -41,7 +41,6 @@ export const getUsersTasks = (callback) => {
           snapshot.docs.map(async (docSnap) => {
             const taskData = docSnap.data();
             const projectRef = taskData.parent_project;
-            const userRef = doc(db, "users", taskData.assigned_to);
 
             let projectName = "Unknown Project";
             if (projectRef) {
@@ -53,12 +52,13 @@ export const getUsersTasks = (callback) => {
             }
 
             let assignedName = "Unassigned";
-            if (userRef) {
-              const userSnap = await getDoc(userRef);
-              if (userSnap.exists()) {
-                const userData = userSnap.data();
-                assignedName = userData.display_name;
-              }
+            if (Array.isArray(taskData.assigned_to) && taskData.assigned_to.length > 0) {
+              const userPromises = taskData.assigned_to.map(async (userId) => {
+                const userRef = doc(db, "users", userId);
+                const userSnap = await getDoc(userRef);
+                return userSnap.exists() ? userSnap.data().display_name || "Unknown" : "Unknown";
+              });
+              assignedName = await Promise.all(userPromises);
             }
 
             return {
@@ -364,6 +364,16 @@ export const getProjectMembers = async (projectId) => {
 
 export const getAvailableTasks = (callback) => {
   try {
+    const auth = getAuth();
+    const currentUser = auth.currentUser;
+
+    // If no user is logged in, return empty results
+    if (!currentUser) {
+      console.warn("No current user logged in for getAvailableTasks");
+      callback([]);
+      return () => {};
+    }
+
     const tasksCollection = collection(db, "tasks");
 
     // Query 1: Tasks with help_req: true
@@ -376,35 +386,41 @@ export const getAvailableTasks = (callback) => {
 
     // Process snapshot for a query
     const processSnapshot = async (snapshot) => {
-      const tasksPromises = snapshot.docs.map(async (docSnap) => {
-        const taskData = docSnap.data();
-        const projectRef = taskData.parent_project;
+      const tasksPromises = snapshot.docs
+        .filter((docSnap) => {
+          const taskData = docSnap.data();
+          // Exclude tasks where current user's ID is in assigned_to
+          return !taskData.assigned_to.includes(currentUser.uid);
+        })
+        .map(async (docSnap) => {
+          const taskData = docSnap.data();
+          const projectRef = taskData.parent_project;
 
-        let projectName = "Unknown Project";
-        if (projectRef) {
-          const projectSnap = await getDoc(projectRef);
-          if (projectSnap.exists()) {
-            projectName = projectSnap.data().project_name;
+          let projectName = "Unknown Project";
+          if (projectRef) {
+            const projectSnap = await getDoc(projectRef);
+            if (projectSnap.exists()) {
+              projectName = projectSnap.data().project_name;
+            }
           }
-        }
 
-        let assignedName = "Unassigned";
-        if (Array.isArray(taskData.assigned_to) && taskData.assigned_to.length > 0) {
-          const userPromises = taskData.assigned_to.map(async (userId) => {
-            const userRef = doc(db, "users", userId);
-            const userSnap = await getDoc(userRef);
-            return userSnap.exists() ? userSnap.data().display_name || "Unknown" : "Unknown";
-          });
-          assignedName = await Promise.all(userPromises);
-        }
+          let assignedName = "Unassigned";
+          if (Array.isArray(taskData.assigned_to) && taskData.assigned_to.length > 0) {
+            const userPromises = taskData.assigned_to.map(async (userId) => {
+              const userRef = doc(db, "users", userId);
+              const userSnap = await getDoc(userRef);
+              return userSnap.exists() ? userSnap.data().display_name || "Unknown" : "Unknown";
+            });
+            assignedName = await Promise.all(userPromises);
+          }
 
-        return {
-          id: docSnap.id,
-          ...taskData,
-          project_name: projectName,
-          assigned_name: assignedName,
-        };
-      });
+          return {
+            id: docSnap.id,
+            ...taskData,
+            project_name: projectName,
+            assigned_name: assignedName,
+          };
+        });
 
       const tasks = await Promise.all(tasksPromises);
       tasks.forEach((task) => tasksMap.set(task.id, task));

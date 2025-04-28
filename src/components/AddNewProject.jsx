@@ -40,7 +40,9 @@ export default function AddNewProject({ onComplete }) {
         
         const users = await getAllUsers();
         setPeople(
-          users.map((user) => ({ id: user.id, name: user.display_name }))
+          users
+            .filter((u) => !user || u.id !== user.uid)
+            .map((user) => ({ id: user.id, name: user.display_name }))
         );
       } catch (error) {
         console.error("Error fetching project IDs:", error);
