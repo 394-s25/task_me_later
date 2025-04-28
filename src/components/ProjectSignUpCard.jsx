@@ -28,7 +28,7 @@ const ProjectSignUpCard = ({ task, onClick, onSignUp }) => {
       </div>
       <div className="mb-2">
         <h3 className="text-lg font-medium ml-2">{task.task_title}</h3>
-        {task.needsHelp && (
+        {task.help_req && (
           <span className="bg-yellow-500 text-white text-xs px-2 py-1 rounded-full ml-2">
             Help Needed
           </span>

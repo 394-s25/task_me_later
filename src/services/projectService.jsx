@@ -37,13 +37,13 @@ export const postNewProject = async ({
   projName,
   projDetails,
   projDueDate,
-  projMembers,
+  finalMembers,
 }) => {
   const projRef = doc(db, "projects", projId.toString());
   await setDoc(projRef, {
     project_id: projId,
     project_name: projName,
-    project_members: projMembers,
+    project_members: finalMembers,
     details: projDetails,
     due_date: projDueDate,
     tasks_completed: 0,

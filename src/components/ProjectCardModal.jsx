@@ -394,7 +394,7 @@ export default function ProjectCardModal({
                   task={{
                     ...task,
                     project: project.project_name,
-                    needsHelp: Math.random() > 0, // Random for demo purposes
+                    //needsHelp: Math.random() > 0, // Random for demo purposes
                   }}
                   onClick={handleTaskClick}
                   onSignUp={handleSignUp}

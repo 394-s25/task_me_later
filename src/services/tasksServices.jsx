@@ -213,7 +213,7 @@ export const getTasksByProjectId = async (projectId, currentUserId) => {
 
     const taskPromises = snapshot.docs.map(async (taskDoc) => {
       const data = taskDoc.data();
-      let assignedName = ["Unassigned"];
+      let assignedName = "Unassigned";
       if (Array.isArray(data.assigned_to) && data.assigned_to.length > 0) {
         const userPromises = data.assigned_to.map(async (userId) => {
         const userRef = doc(db, "users", userId);
