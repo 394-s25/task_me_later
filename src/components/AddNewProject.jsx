@@ -27,7 +27,7 @@ export default function AddNewProject({ onComplete }) {
   const theme = useTheme();
   const auth = getAuth();
   const user = auth.currentUser;
-  
+
   useEffect(() => {
     const fetchMaxID = async () => {
       try {
@@ -37,7 +37,7 @@ export default function AddNewProject({ onComplete }) {
           .filter(Number.isInteger);
         const max = ids.length ? Math.max(...ids) : 0;
         setProjId(max + 1);
-        
+
         const users = await getAllUsers();
         setPeople(
           users
@@ -50,22 +50,21 @@ export default function AddNewProject({ onComplete }) {
     };
     fetchMaxID();
   }, []);
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const creatorId = user?.uid;
     const finalMembers = projMembers.includes(creatorId)
       ? projMembers
-      : [...projMembers, creatorId]; 
+      : [...projMembers, creatorId];
     try {
       await postNewProject({
         projId,
         projName,
         projDetails,
         projDueDate,
-        finalMembers,
+        projMembers: finalMembers,
       });
-      //console.log("project members", projMembers);
       setProjName("");
       setProjDetails("");
       setProjDueDate("");
