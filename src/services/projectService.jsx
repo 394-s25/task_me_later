@@ -37,11 +37,13 @@ export const postNewProject = async ({
   projName,
   projDetails,
   projDueDate,
+  projMembers,
 }) => {
   const projRef = doc(db, "projects", projId.toString());
   await setDoc(projRef, {
     project_id: projId,
     project_name: projName,
+    project_members: projMembers,
     details: projDetails,
     due_date: projDueDate,
     tasks_completed: 0,
@@ -50,21 +52,10 @@ export const postNewProject = async ({
     my_tasks: [],
     team_tasks: [],
     available_tasks: [],
-    notes: [
-      {
-        user: "Me",
-        notes: ["Working on setting up database."],
-      },
-      {
-        user: "Taylor",
-        notes: [
-          "I have three color scheme options for the page design, need help deciding.",
-          "Presentation is done!",
-        ],
-      },
-    ],
+    notes: [],
   });
 };
+
 
 export const getAllProjects = async () => {
   console.log("Getting all projects from database");
@@ -79,8 +70,9 @@ export const getAllProjects = async () => {
       ...doc.data(),
     }))
     .filter((project) => {
-      const hiddenFor = project.hidden_for || [];
-      return !hiddenFor.includes(user?.uid);
+      //const hiddenFor = project.hidden_for || [];
+      const projectMembers = project.project_members || [];
+      return user && projectMembers.includes(user.uid); // && !hiddenFor.includes(user.uid);
     });
 
   console.log("Projects returned:", projects);

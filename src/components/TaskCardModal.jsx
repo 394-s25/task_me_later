@@ -10,6 +10,7 @@ import Slide from "@mui/material/Slide";
 import tml_logo_white from "../imgs/tml_logo_white.png";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add";
 import {
   Chip,
   DialogActions,
@@ -28,7 +29,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { getAuth } from "firebase/auth";
 import { getOrCreateConversation } from "../services/messagesService";
-import { getDoc, doc } from "firebase/firestore";
+import { getDoc, doc, updateDoc, arrayUnion } from "firebase/firestore";
 import { db } from "../services/firestoreConfig";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -50,6 +51,12 @@ export default function TaskCardModal({
   const [newNoteText, setNewNoteText] = React.useState("");
   const [editingNoteIndex, setEditingNoteIndex] = React.useState(-1);
   const [editingNoteText, setEditingNoteText] = React.useState("");
+
+  const [dependencyDialogOpen, setDependencyDialogOpen] = React.useState(false);
+  const [availableDependencyTasks, setAvailableDependencyTasks] =
+    React.useState([]);
+  const [selectedDependencyTaskId, setSelectedDependencyTaskId] =
+    React.useState("");
 
   if (!task) return null;
 
@@ -123,6 +130,7 @@ export default function TaskCardModal({
       setNewNoteText("");
     } catch (err) {
       console.error("Failed to add note: ", err);
+      // comment
     }
   };
 
@@ -159,6 +167,52 @@ export default function TaskCardModal({
       }));
     } catch (err) {
       console.error("Failed to delete note: ", err);
+    }
+  };
+
+  const handleAddDependency = () => {
+    const availableTasks = allTasks.filter((t) => {
+      return (
+        t.id !== task.id &&
+        !task.project_dependencies?.some((dep) => dep.id === t.id) &&
+        t.parent_project?.id === task.parent_project?.id
+      );
+    });
+
+    setAvailableDependencyTasks(availableTasks);
+    setSelectedDependencyTaskId("");
+    setDependencyDialogOpen(true);
+  };
+
+  const handleConfirmAddDependency = async () => {
+    try {
+      if (!selectedDependencyTaskId) return;
+
+      const selectedTask = availableDependencyTasks.find(
+        (t) => t.id === selectedDependencyTaskId
+      );
+      if (!selectedTask) {
+        console.warn("Selected dependency task not found");
+        return;
+      }
+
+      const taskRef = doc(db, "tasks", task.id);
+
+      await updateDoc(taskRef, {
+        project_dependencies: arrayUnion(doc(db, "tasks", selectedTask.id)),
+      });
+
+      setTask((prev) => ({
+        ...prev,
+        project_dependencies: [
+          ...(prev.project_dependencies || []),
+          { id: selectedTask.id },
+        ],
+      }));
+
+      setDependencyDialogOpen(false);
+    } catch (err) {
+      console.error("Error adding dependency:", err);
     }
   };
 
@@ -203,25 +257,34 @@ export default function TaskCardModal({
             <h2>
               <div>
                 <h1 className="font-bold">
-                  Assigned To
-                  {task.assigned_name &&
-                  task.assigned_name !== "Unassigned" &&
-                  task.assigned_to !== currentUserId ? (
-                    <span
-                      onClick={async () => {
-                        const conversationId = await getOrCreateConversation(
-                          currentUserId,
-                          task.assigned_to
-                        );
-                        navigate(`/chat/${conversationId}`, {
-                          state: {
-                            displayName: task.assigned_name,
-                          },
-                        });
-                      }}
-                      className="text-blue-600 cursor-pointer underline ml-2"
-                    >
-                      {task.assigned_name}
+                  Assigned To:
+                  {task.assigned_name && task.assigned_name !== "Unassigned" ? (
+                    <span className="ml-2 font-normal ">
+                      {task.assigned_name.map((name, index) => (
+                        <span
+                          key={task.assigned_to[index]}
+                          {...(task.assigned_to[index] !== currentUserId && {
+                            onClick: async () => {
+                              const conversationId =
+                                await getOrCreateConversation(
+                                  currentUserId,
+                                  task.assigned_to[index]
+                                );
+                              navigate(`/chat/${conversationId}`, {
+                                state: {
+                                  displayName: name,
+                                },
+                              });
+                            },
+                            className:
+                              "cursor-pointer hover:underline hover:text-blue-500",
+                          })}
+                        >
+                          {name}
+                          {task.assigned_to[index] === currentUserId && " (me)"}
+                          {index < task.assigned_name.length - 1 && ", "}
+                        </span>
+                      ))}
                     </span>
                   ) : (
                     <span className="ml-2">
@@ -243,33 +306,45 @@ export default function TaskCardModal({
           {/* </div> */}
           <hr class="mt-3" />
           <div>
-            <h1 class="font-bold">Dependencies</h1>
-            <div class="flex gap-2 mt-1">
-              {task.project_dependencies?.map((proj_dep, index) => (
-                <div key={index}>
-                  <Chip
-                    label={proj_dep}
-                    size="small"
-                    sx={{
-                      backgroundColor: getRandomHexColor(),
-                      color: "white",
-                    }}
-                    onClick={() => {
-                      const nextTask = allTasks.find(
-                        (t) => t.task_title === proj_dep
-                      );
-                      if (nextTask) {
-                        setTask(nextTask); // update the modal to show this task
-                      } else {
-                        console.warn(
-                          "Task not found for dependency:",
-                          proj_dep
-                        );
-                      }
-                    }}
-                  />
-                </div>
-              ))}
+            <div className="flex justify-between items-center">
+              <h1 className="font-bold">Dependencies</h1>
+              <Button
+                startIcon={<AddIcon />}
+                size="small"
+                onClick={() => handleAddDependency()}
+              >
+                Add
+              </Button>
+            </div>
+            <div className="flex flex-wrap gap-2 mt-2">
+              {task.project_dependencies &&
+              task.project_dependencies.length > 0 ? (
+                task.project_dependencies.map((projDep, index) => {
+                  const nextTask = allTasks.find((t) => t.id === projDep.id);
+                  return (
+                    <Chip
+                      key={index}
+                      label={nextTask ? nextTask.task_title : "Unknown task"}
+                      sx={{
+                        backgroundColor: getRandomHexColor(),
+                        color: "white",
+                      }}
+                      onClick={() => {
+                        if (nextTask) {
+                          setTask(nextTask);
+                        } else {
+                          console.warn(
+                            "Task not found for dependency: ",
+                            projDep.id
+                          );
+                        }
+                      }}
+                    />
+                  );
+                })
+              ) : (
+                <p className="text-gray-500 italic">No dependencies</p>
+              )}
             </div>
           </div>
           <hr class="mt-3" />
@@ -420,6 +495,46 @@ export default function TaskCardModal({
           <Button onClick={() => setConfirmOpen(false)}>Cancel</Button>
           <Button onClick={handleDelete} color="error">
             Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={dependencyDialogOpen}
+        onClose={() => setDependencyDialogOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>Select a Task to Add as Dependency</DialogTitle>
+        <DialogContent>
+          {availableDependencyTasks.length > 0 ? (
+            <div className="flex flex-col gap-3 mt-2">
+              <select
+                value={selectedDependencyTaskId}
+                onChange={(e) => setSelectedDependencyTaskId(e.target.value)}
+                className="border p-2 rounded"
+              >
+                <option value="">Select a task...</option>
+                {availableDependencyTasks.map((task) => (
+                  <option key={task.id} value={task.id}>
+                    {task.task_title}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ) : (
+            <p className="text-gray-500 italic mt-2">
+              No available tasks to add as dependencies.
+            </p>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDependencyDialogOpen(false)}>Cancel</Button>
+          <Button
+            onClick={handleConfirmAddDependency}
+            variant="contained"
+            disabled={!selectedDependencyTaskId}
+          >
+            Add Dependency
           </Button>
         </DialogActions>
       </Dialog>
