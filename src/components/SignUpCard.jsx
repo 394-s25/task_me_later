@@ -1,7 +1,17 @@
-import React from "react";
-import { Chip } from "@mui/material";
+import React, {useState} from "react";
+import { Chip, Menu, MenuItem } from "@mui/material";
 import ProjectTag from "./ProjectTag";
 const SignUpCard = ({ task, onClick, onSignUp }) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
   return (
     <div
       className="m-2 border rounded-lg bg-white shadow-md cursor-pointer"
@@ -30,6 +40,45 @@ const SignUpCard = ({ task, onClick, onSignUp }) => {
 
       <div className="text-sm text-gray-600 mb-2 ml-2">
         Due: {task.due_date}
+      </div>
+
+      <div className="text-sm text-gray-600 mb-2 ml-2">
+        {Array.isArray(task.assigned_name) ? (
+          <>
+            <span
+              className="cursor-pointer hover:underline"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleMenuOpen(e);
+              }}
+            >
+              Assigned to
+            </span>
+            <Menu
+              anchorEl={anchorEl}
+              open={open}
+              onClose={(e) => {
+                e.stopPropagation();
+                handleMenuClose();
+              }}
+              PaperProps={{
+                style: { maxHeight: 200, width: "20ch" },
+              }}
+            >
+              {task.assigned_name.map((name) => (
+                <MenuItem
+                  key={name}
+                  disabled
+                  sx={{ cursor: "default", color: "text.primary" }}
+                >
+                  {name}
+                </MenuItem>
+              ))}
+            </Menu>
+          </>
+        ) : (
+          <span className="text-red-500">Unassigned</span>
+        )}
       </div>
 
       <div className="flex justify-end mt-4">
