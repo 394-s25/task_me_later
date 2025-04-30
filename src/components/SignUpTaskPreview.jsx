@@ -6,6 +6,7 @@ import { getAvailableTasks } from "../services/tasksServices";
 const TaskSignupPreview = () => {
   const [tasks, setTasks] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
+
   const [signedUpTasks, setSignedUpTasks] = useState([]);
 
   useEffect(() => {
